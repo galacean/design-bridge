@@ -11,7 +11,7 @@ catalog:
   '@galacean/effects-plugin-ffd': 2.11.0-alpha.1
   '@galacean/effects-plugin-model': 2.11.0-alpha.1
   '@galacean/effects-plugin-multimedia': 2.11.0-alpha.1
-  '@galacean/effects-plugin-rich-text': 2.11.0-alpha.1
+  '@galacean/effects-plugin-rich-text': 2.11.0-alpha.3
   '@galacean/effects-plugin-spine': 2.11.0-alpha.1
   '@galacean/effects-specification': 2.9.0
   '@types/react': ^19.2.14

@@ -22,8 +22,8 @@ catalogs:
       specifier: 2.11.0-alpha.1
       version: 2.11.0-alpha.1
     '@galacean/effects-plugin-rich-text':
-      specifier: 2.11.0-alpha.1
-      version: 2.11.0-alpha.1
+      specifier: 2.11.0-alpha.3
+      version: 2.11.0-alpha.3
     '@galacean/effects-plugin-spine':
       specifier: 2.11.0-alpha.1
       version: 2.11.0-alpha.1
@@ -197,12 +197,12 @@ importers:
 
   packages/ge-ir:
     dependencies:
-      '@galacean/effects-specification':
-        specifier: 'catalog:'
-        version: 2.9.0
       '@galacean/animation-ir':
         specifier: workspace:*
         version: link:../animation-ir
+      '@galacean/effects-specification':
+        specifier: 'catalog:'
+        version: 2.9.0
       uuid:
         specifier: 'catalog:'
         version: 13.0.0
@@ -237,15 +237,15 @@ importers:
 
   packages/lottie2ir:
     dependencies:
+      '@galacean/animation-ir':
+        specifier: workspace:*
+        version: link:../animation-ir
       '@lottie-animation-community/lottie-types':
         specifier: ^1.2.0
         version: 1.2.0
       '@progress/jszip-esm':
         specifier: ^1.0.4
         version: 1.0.4
-      '@galacean/animation-ir':
-        specifier: workspace:*
-        version: link:../animation-ir
       uuid:
         specifier: 'catalog:'
         version: 13.0.0
@@ -256,12 +256,12 @@ importers:
       '@galacean/effects-specification':
         specifier: 'catalog:'
         version: 2.9.0
-      '@lottie-animation-community/lottie-specs':
-        specifier: ^0.3.2
-        version: 0.3.2
       '@galacean/ge-ir':
         specifier: workspace:*
         version: link:../ge-ir
+      '@lottie-animation-community/lottie-specs':
+        specifier: ^0.3.2
+        version: 0.3.2
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -277,18 +277,18 @@ importers:
 
   packages/svg2ir:
     dependencies:
-      '@galacean/effects-specification':
-        specifier: 'catalog:'
-        version: 2.9.0
-      '@svgdotjs/svg.js':
-        specifier: 3.2.7
-        version: 3.2.7
       '@galacean/animation-ir':
         specifier: workspace:*
         version: link:../animation-ir
+      '@galacean/effects-specification':
+        specifier: 'catalog:'
+        version: 2.9.0
       '@galacean/ge-ir':
         specifier: workspace:*
         version: link:../ge-ir
+      '@svgdotjs/svg.js':
+        specifier: 3.2.7
+        version: 3.2.7
       svgdom:
         specifier: 0.1.14
         version: 0.1.14
@@ -341,6 +341,9 @@ importers:
       '@ffmpeg/ffmpeg':
         specifier: 'catalog:'
         version: 0.12.15
+      '@galacean/dsl-ir':
+        specifier: workspace:*
+        version: link:../packages/dsl-ir
       '@galacean/effects':
         specifier: 'catalog:'
         version: 2.11.0-alpha.1
@@ -355,16 +358,13 @@ importers:
         version: 2.11.0-alpha.1
       '@galacean/effects-plugin-rich-text':
         specifier: 'catalog:'
-        version: 2.11.0-alpha.1
+        version: 2.11.0-alpha.3
       '@galacean/effects-plugin-spine':
         specifier: 'catalog:'
         version: 2.11.0-alpha.1
       '@galacean/effects-specification':
         specifier: 'catalog:'
         version: 2.9.0
-      '@galacean/dsl-ir':
-        specifier: workspace:*
-        version: link:../packages/dsl-ir
       '@galacean/figma2ge':
         specifier: workspace:*
         version: link:../packages/figma2ge
@@ -792,8 +792,8 @@ packages:
   '@galacean/effects-plugin-multimedia@2.11.0-alpha.1':
     resolution: {integrity: sha512-R+26HKIYHk9usg9OPcVXLUbH6VJML8PWX1778vUAZ+SC1JfPTbSy4wtajsNOTrWl9c47hCf967zGVbRIvWTz1A==}
 
-  '@galacean/effects-plugin-rich-text@2.11.0-alpha.1':
-    resolution: {integrity: sha512-CgWB4vdl46tjDopsT5yx2kIqklDROOKXzaRVfjFcbaPLeWVmcuj8gcWdLzae/Uemck04UN31SqMbNPrDDXb62Q==}
+  '@galacean/effects-plugin-rich-text@2.11.0-alpha.3':
+    resolution: {integrity: sha512-WoMPi2qDCD2IK6FWNbTnLY6cAMFDyJvKJYyF96bQXaPV9X2My69lI/8EjQ5phPGWCL0TNlZQq2TLxurLYbV0xg==}
 
   '@galacean/effects-plugin-spine@2.11.0-alpha.1':
     resolution: {integrity: sha512-Zblgl7PVnY6gwSA/0nlMzwDSGBUWvdDJvrefQmGg1xj6DZAuU3X5rRkwBS2bF9wZQHWz9pyeVhDZ4BWmG86uXg==}
@@ -3994,7 +3994,7 @@ snapshots:
 
   '@galacean/effects-plugin-multimedia@2.11.0-alpha.1': {}
 
-  '@galacean/effects-plugin-rich-text@2.11.0-alpha.1': {}
+  '@galacean/effects-plugin-rich-text@2.11.0-alpha.3': {}
 
   '@galacean/effects-plugin-spine@2.11.0-alpha.1':
     dependencies:
