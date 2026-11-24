@@ -1,0 +1,9 @@
+{
+  "id": "snapshot-geometry",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 480, "height": 280 },
+  "targets": [
+    { "id": "offset", "selector": "#offset", "sceneName": "offset" },
+    { "id": "clip-stage", "selector": "#clip-stage", "sceneName": "clip-stage" }
+  ]
+}

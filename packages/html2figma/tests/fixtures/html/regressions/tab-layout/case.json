@@ -1,0 +1,11 @@
+{
+  "id": "tab-layout",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 600, "height": 500 },
+  "resources": { "/__e2e/roboto-latin-400-normal.woff2": "assets/roboto-latin-400-normal.woff2" },
+  "targets": [
+    { "id": "four", "selector": "#four", "sceneName": "four" },
+    { "id": "eight", "selector": "#eight", "sceneName": "eight" },
+    { "id": "wrapped", "selector": "#wrapped", "sceneName": "wrapped" }
+  ]
+}

@@ -1,0 +1,49 @@
+<!doctype html><meta charset="utf-8">
+<style>
+@font-face { font-family:Roboto; src:url('/__e2e/roboto.woff2'); }
+body {margin:0;padding:24px;background:white;font:20px/28px Roboto;color:#18243b}
+table {border-collapse:collapse;margin:0 0 24px;width:480px} td {border:2px solid #64748b;padding:12px}
+#transparent td {border-color:rgba(22,100,180,.4)}
+#conflicts tr:first-child td {border-bottom:4px solid #db522f}
+#conflicts td:nth-child(2) {border-left:6px solid #225dc4}
+#hidden td:nth-child(2) {border-left-style:hidden}
+#merged td:first-child {border-right:5px solid #275bb2}
+</style>
+<table id="transparent">
+<tr>
+<td>Alpha A</td>
+<td>Alpha B</td>
+</tr>
+<tr>
+<td>Alpha C</td>
+<td>Alpha D</td>
+</tr>
+</table>
+<table id="conflicts">
+<tr>
+<td>Red edge</td>
+<td>Blue edge</td>
+</tr>
+<tr>
+<td>Width wins</td>
+<td>Shared once</td>
+</tr>
+</table>
+<table id="hidden">
+<tr>
+<td>Visible cell</td>
+<td>Hidden edge</td>
+</tr>
+</table>
+<table id="merged">
+<tr>
+<td rowspan="2">Two rows</td>
+<td>Upper</td>
+</tr>
+<tr>
+<td>Lower</td>
+</tr>
+<tr>
+<td colspan="2">Merged footer</td>
+</tr>
+</table>

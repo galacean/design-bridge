@@ -1,0 +1,85 @@
+{
+  "name": "@galacean/html2figma",
+  "version": "1.0.0",
+  "description": "HTML to Figma conversion engine — Scene extraction, .fig files, and clipboard generation",
+  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "data"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./node": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/browser.mjs",
+      "types": "./dist/browser.d.ts"
+    },
+    "./browser/zip": {
+      "import": "./dist/browser-zip.mjs",
+      "types": "./dist/browser-zip-entry.d.ts"
+    },
+    "./browser/clipboard": {
+      "import": "./dist/browser-clipboard.mjs",
+      "types": "./dist/browser-clipboard-entry.d.ts"
+    },
+    "./browser/file": {
+      "import": "./dist/browser-file.mjs",
+      "types": "./dist/browser-file-entry.d.ts"
+    }
+  },
+  "scripts": {
+    "prebuild": "pnpm clean",
+    "build": "pnpm build:declaration && pnpm build:module",
+    "build:module": "rollup -c --bundleConfigAsCjs",
+    "build:declaration": "tsc -d --emitDeclarationOnly",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "test": "vitest run",
+    "test:html": "vitest run tests/integration/html-corpus.test.ts",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@bokuweb/zstd-wasm": "0.0.27",
+    "fontkit": "^2.0.4",
+    "jszip": "catalog:",
+    "kiwi-schema": "catalog:",
+    "pako": "catalog:",
+    "playwright": "1.57.0",
+    "woff2-encoder": "2.0.0"
+  },
+  "contributors": [
+    {
+      "name": "意绮"
+    }
+  ],
+  "author": "Ant Group CO., Ltd.",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "https://github.com/galacean/design-bridge",
+  "bugs": {
+    "url": "https://github.com/galacean/design-bridge/issues"
+  },
+  "homepage": "https://github.com/galacean/design-bridge/tree/main/packages/html2figma#readme",
+  "keywords": [
+    "html",
+    "css",
+    "figma",
+    "clipboard",
+    "fig"
+  ],
+  "devDependencies": {
+    "@types/fontkit": "^2.0.9"
+  }
+}

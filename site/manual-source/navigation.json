@@ -1,0 +1,236 @@
+[
+  {
+    "slug": "getting-started",
+    "title": {
+      "zh-CN": "快速开始",
+      "en": "Getting started"
+    },
+    "group": {
+      "zh-CN": "入门",
+      "en": "Get started"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "conversion",
+    "title": {
+      "zh-CN": "转换链路",
+      "en": "Conversion paths"
+    },
+    "group": {
+      "zh-CN": "入门",
+      "en": "Get started"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "animation-ir",
+    "title": {
+      "zh-CN": "Animation IR 模型",
+      "en": "The Animation IR model"
+    },
+    "group": {
+      "zh-CN": "核心概念",
+      "en": "Core concepts"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "author-animation-ir",
+    "title": {
+      "zh-CN": "构建 Animation IR",
+      "en": "Authoring Animation IR"
+    },
+    "group": {
+      "zh-CN": "核心概念",
+      "en": "Core concepts"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "import-animation",
+    "title": {
+      "zh-CN": "接入 Lottie 与 SVG",
+      "en": "Importing Lottie and SVG"
+    },
+    "group": {
+      "zh-CN": "接入与转换",
+      "en": "Import and convert"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "shader-to-ge",
+    "title": {
+      "zh-CN": "Shader 到 GE 指南",
+      "en": "Shader to GE guide"
+    },
+    "group": {
+      "zh-CN": "接入与转换",
+      "en": "Import and convert"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "design-to-ge",
+    "title": {
+      "zh-CN": "设计文件与网页接入",
+      "en": "Design files and web pages"
+    },
+    "group": {
+      "zh-CN": "接入与转换",
+      "en": "Import and convert"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "dsl-editing",
+    "title": {
+      "zh-CN": "DSL 编辑指南",
+      "en": "DSL editing guide"
+    },
+    "group": {
+      "zh-CN": "编辑与保真",
+      "en": "Editing and fidelity"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "fidelity-editing",
+    "title": {
+      "zh-CN": "保真编辑",
+      "en": "Fidelity editing"
+    },
+    "group": {
+      "zh-CN": "编辑与保真",
+      "en": "Editing and fidelity"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "best-practices",
+    "title": {
+      "zh-CN": "最佳实践",
+      "en": "Best practices"
+    },
+    "group": {
+      "zh-CN": "实践与排查",
+      "en": "Practice and troubleshooting"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "troubleshooting",
+    "title": {
+      "zh-CN": "常见问题与排查",
+      "en": "Troubleshooting"
+    },
+    "group": {
+      "zh-CN": "实践与排查",
+      "en": "Practice and troubleshooting"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "playground",
+    "title": {
+      "zh-CN": "在本地工作台体验",
+      "en": "Try it in the local workbench"
+    },
+    "group": {
+      "zh-CN": "体验与参考",
+      "en": "Explore and reference"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  },
+  {
+    "slug": "runtime-and-limits",
+    "title": {
+      "zh-CN": "运行环境与限制",
+      "en": "Runtimes and limitations"
+    },
+    "group": {
+      "zh-CN": "体验与参考",
+      "en": "Explore and reference"
+    },
+    "format": {
+      "zh-CN": "markdown",
+      "en": "markdown"
+    },
+    "source": {
+      "type": "local"
+    }
+  }
+]

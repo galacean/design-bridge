@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: Roboto; src: url('/__e2e/roboto-latin-400-normal.woff2'); }
+body { margin: 0; padding: 24px; font: 24px/32px Roboto; background: white; }
+div { white-space: pre; width: 500px; border: 1px solid #ddd; margin-bottom: 20px; }
+#four { tab-size: 4; }
+#eight { tab-size: 8; }
+#wrapped { white-space: pre-wrap; width: 220px; tab-size: 4; }
+</style>
+<div id="four">A&#9;B
+AA&#9;C
+
+&#9;D</div>
+<div id="eight">A&#9;B
+AA&#9;C</div>
+<div id="wrapped">A&#9;long words wrap onto another row
+&#9;final row</div>

@@ -1,0 +1,25 @@
+name: Feature request
+description: Describe a conversion capability or developer workflow.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the user problem, affected package, and input format.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the behavior you would like to see and include a small shareable example.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Note any alternatives or tradeoffs.
+    validations:
+      required: false

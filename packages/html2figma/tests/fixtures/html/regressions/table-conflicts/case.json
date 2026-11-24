@@ -1,0 +1,33 @@
+{
+  "id": "table-conflicts",
+  "scriptPolicy": "disabled",
+  "viewport": {
+    "width": 560,
+    "height": 650
+  },
+  "resources": {
+    "/__e2e/roboto.woff2": "assets/roboto-latin-400-normal.woff2"
+  },
+  "targets": [
+    {
+      "id": "transparent",
+      "selector": "#transparent",
+      "sceneName": "transparent"
+    },
+    {
+      "id": "conflicts",
+      "selector": "#conflicts",
+      "sceneName": "conflicts"
+    },
+    {
+      "id": "hidden",
+      "selector": "#hidden",
+      "sceneName": "hidden"
+    },
+    {
+      "id": "merged",
+      "selector": "#merged",
+      "sceneName": "merged"
+    }
+  ]
+}

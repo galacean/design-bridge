@@ -1,0 +1,9 @@
+{
+  "id": "snapshot-fixed-position",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 200, "height": 200 },
+  "targets": [
+    { "id": "content", "selector": "#content", "sceneName": "content" },
+    { "id": "footer", "selector": "#footer", "sceneName": "footer" }
+  ]
+}

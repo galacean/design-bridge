@@ -1,0 +1,44 @@
+{
+  "id": "synthetic-fonts",
+  "scriptPolicy": "disabled",
+  "viewport": {
+    "width": 620,
+    "height": 450
+  },
+  "resources": {
+    "/__e2e/inter.woff2": "assets/inter-latin-400-normal.woff2",
+    "/__e2e/italic.woff2": "assets/roboto-latin-400-italic.woff2"
+  },
+  "targets": [
+    {
+      "id": "regular",
+      "selector": "#regular",
+      "sceneName": "regular"
+    },
+    {
+      "id": "bold",
+      "selector": "#bold",
+      "sceneName": "bold"
+    },
+    {
+      "id": "italic",
+      "selector": "#italic",
+      "sceneName": "italic"
+    },
+    {
+      "id": "both",
+      "selector": "#both",
+      "sceneName": "both"
+    },
+    {
+      "id": "disabled",
+      "selector": "#disabled",
+      "sceneName": "disabled"
+    },
+    {
+      "id": "actual",
+      "selector": "#actual",
+      "sceneName": "actual"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: Inter; src: url('/__e2e/inter.woff2'); }
+@font-face { font-family: Roboto; src: url('/__e2e/roboto.woff2'); }
+body { margin: 0; padding: 32px; background: #eef1f5; color: #16243b; font: 16px/24px Inter; }
+main { width: 720px; padding: 28px; background: white; border: 1px solid #d7dee8; border-radius: 12px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+h1 { margin: 0; font: 32px/40px Roboto; }
+.status { padding: 4px 12px; border-radius: 16px; background: #e1f4e9; color: #166943; }
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.summary div { background: #f5f7fa; padding: 16px; border-radius: 8px; }
+strong { display: block; font: 28px/36px Roboto; }
+table { width: 100%; border-collapse: collapse; font: 16px/24px Roboto; }
+th, td { padding: 10px 12px; border: 1px solid #d7dee8; text-align: left; }
+th { background: #edf2f8; }
+td:last-child, th:last-child { text-align: right; }
+.total { background: #f5f7fa; font-weight: bold; }
+p { margin: 20px 0 12px; }
+pre { margin: 0; padding: 16px; white-space: pre-wrap; tab-size: 4; background: #f5f7fa; font: 16px/24px Roboto; }
+footer { margin-top: 20px; color: #6a7587; font: 14px/20px Inter; }
+</style>
+<main id="document">
+<header id="heading"><h1>Project invoice</h1><span class="status">Approved</span></header>
+<section class="summary" id="summary"><div>Invoice<strong>2026-1105</strong></div><div>Items<strong>3</strong></div><div>Total<strong>$1,260.00</strong></div></section>
+<table id="items"><thead><tr><th>Deliverable</th><th>Quantity</th><th>Amount</th></tr></thead><tbody><tr><td>Interface design</td><td>4 screens</td><td>$800.00</td></tr><tr><td>Office icons</td><td>12 assets</td><td>$300.00</td></tr><tr><td>Documentation</td><td>1 package</td><td>$160.00</td></tr><tr class="total"><td colspan="2">Total due</td><td>$1,260.00</td></tr></tbody></table>
+<p id="note">Delivery includes <span style="font:20px Roboto">editable layers</span> and <span style="font-size:12px;vertical-align:super">version 2</span>.</p>
+<pre id="log">Step&#9;Status
+Export&#9;Ready
+
+  Keep indentation and blank rows.</pre>
+<footer id="footer">Prepared locally. No external scripts or services required.</footer>
+</main>

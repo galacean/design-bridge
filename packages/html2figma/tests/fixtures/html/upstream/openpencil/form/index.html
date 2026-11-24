@@ -1,0 +1,114 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  .fixture-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 480px;
+    padding: 32px;
+    background: rgb(248, 250, 252);
+    color: rgb(2, 6, 23);
+  }
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 416px;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid rgb(226, 232, 240);
+    border-radius: 12px;
+    background: rgb(255, 255, 255);
+  }
+  .brand {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-item {
+    font-size: 14px;
+    line-height: 20px;
+    color: rgb(31, 41, 55);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    background: rgb(224, 242, 254);
+    color: rgb(3, 105, 161);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+  .dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 360px;
+    min-width: 320px;
+    max-width: 420px;
+    padding: 24px;
+    border: 1px solid rgb(226, 232, 240);
+    border-radius: 18px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0px 16px 40px 0px rgba(15, 23, 42, 0.16);
+  }
+  .dialog-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+  .dialog-description {
+    font-size: 14px;
+    line-height: 20px;
+    color: rgb(71, 85, 105);
+  }
+  .input {
+    width: 312px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid rgb(203, 213, 225);
+    border-radius: 8px;
+    background: rgb(255, 255, 255);
+    color: rgb(2, 6, 23);
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 312px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgb(2, 6, 23);
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+</style></head><body>
+  <section class="fixture-shell">
+    <nav class="navbar">
+      <span class="brand">OpenPencil</span>
+      <div class="nav-actions">
+        <span class="nav-item">Docs</span>
+        <span class="badge">Beta</span>
+      </div>
+    </nav>
+    <dialog class="dialog" open>
+      <h2 class="dialog-title">Import from web</h2>
+      <p class="dialog-description">Convert HTML and CSS into editable design layers.</p>
+      <input class="input" value="https://openpencil.dev" />
+      <button class="primary-button">Create design</button>
+    </dialog>
+  </section>
+</body></html>

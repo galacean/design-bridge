@@ -1,0 +1,11 @@
+{
+  "id": "ligature-text",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 680, "height": 280 },
+  "resources": { "/__e2e/roboto-latin-400-normal.woff2": "assets/roboto-latin-400-normal.woff2" },
+  "targets": [
+    { "id": "normal", "selector": "#normal", "sceneName": "normal" },
+    { "id": "disabled", "selector": "#disabled", "sceneName": "disabled" },
+    { "id": "tracked", "selector": "#tracked", "sceneName": "tracked" }
+  ]
+}

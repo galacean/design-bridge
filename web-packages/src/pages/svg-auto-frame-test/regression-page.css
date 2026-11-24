@@ -1,0 +1,219 @@
+.svg-regression-fields,
+.svg-regression-case-fields,
+.svg-regression-run-fields {
+  display: grid;
+  gap: 12px;
+}
+
+.svg-regression-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--workbench-muted);
+}
+
+.svg-regression-field :is(input, select) {
+  width: 100%;
+  color: var(--color-text-primary);
+}
+
+.svg-regression-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--workbench-border);
+}
+
+.svg-regression-panel {
+  overflow: visible;
+}
+
+.svg-regression-run-control {
+  display: inline-flex;
+}
+
+.svg-regression-stop-idle {
+  visibility: hidden;
+}
+
+.svg-regression-controls .svg-regression-run-main {
+  border-radius: 6px 0 0 6px;
+}
+
+.svg-regression-menu {
+  position: relative;
+}
+
+.svg-regression-menu > summary {
+  list-style: none;
+  white-space: nowrap;
+}
+
+.svg-regression-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.svg-regression-controls .svg-regression-run-options {
+  width: 32px;
+  padding: 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.svg-regression-menu[open] > summary {
+  border-color: var(--workbench-accent);
+  background: var(--workbench-accent-dim);
+}
+
+.svg-regression-menu-content {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 8px);
+  left: 0;
+  width: max-content;
+  min-width: 190px;
+  max-width: min(260px, calc(100vw - 48px));
+  padding: 4px;
+  border: 1px solid var(--workbench-border);
+  border-radius: 8px;
+  background: var(--workbench-surface);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+}
+
+.svg-regression-export-menu .svg-regression-menu-content {
+  right: 0;
+  left: auto;
+}
+
+.svg-regression-menu-item {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: 12px;
+  text-align: left;
+}
+
+.svg-regression-menu-item:hover:not(:disabled) {
+  background: var(--workbench-accent-dim);
+}
+
+.svg-regression-result-filter {
+  display: grid;
+  width: min(100%, 400px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--workbench-border);
+  border-radius: 6px;
+  background: var(--workbench-bg);
+}
+
+.svg-regression-result-option {
+  display: flex;
+  height: 30px;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--workbench-muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.svg-regression-result-option[aria-pressed='true'] {
+  background: var(--workbench-surface);
+  color: var(--color-text-emphasis);
+  box-shadow: 0 1px 3px var(--workbench-border);
+}
+
+.svg-regression-case-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--workbench-border);
+  border-left: 3px solid var(--workbench-accent);
+  background: var(--workbench-surface);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.svg-regression-case-link::after {
+  margin-left: auto;
+  color: var(--workbench-muted);
+  content: '↗';
+}
+
+.svg-regression-case-link[data-case-status='fail'] {
+  border-left-color: var(--coral);
+}
+
+.svg-regression-case-link[data-case-status='skip'] {
+  border-left-color: var(--workbench-muted);
+}
+
+.svg-regression-case-link:hover {
+  background: var(--workbench-accent-dim);
+}
+
+.svg-regression-gallery-link,
+.svg-regression-log-link {
+  color: var(--workbench-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.svg-regression-case-error {
+  margin: 0;
+  padding: 0 12px 10px;
+  color: var(--coral);
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.svg-regression-view-pass #mocha .test:not(.pass),
+.svg-regression-view-pass #mocha .test.pending,
+.svg-regression-view-pass #frame-galleries > [data-case-status]:not([data-case-status='pass']),
+.svg-regression-view-pass #frame-galleries .ui-frame-gallery,
+.svg-regression-view-fail #mocha .test:not(.fail),
+.svg-regression-view-fail #frame-galleries > [data-case-status]:not([data-case-status='fail']),
+.svg-regression-view-skip #mocha .test:not(.pending),
+.svg-regression-view-skip #frame-galleries > [data-case-status]:not([data-case-status='skip']),
+.svg-regression-view-skip #frame-galleries .ui-frame-gallery {
+  display: none;
+}
+
+@media (min-width: 360px) {
+  .svg-regression-case-fields,
+  .svg-regression-run-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .svg-regression-fields {
+    grid-template-columns: minmax(0, 3fr) minmax(240px, 1fr);
+    gap: 24px;
+  }
+
+  .svg-regression-case-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .svg-regression-run-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

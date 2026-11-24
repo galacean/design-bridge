@@ -1,0 +1,19 @@
+:root {
+  --site-link: #a33120;
+  --site-accent: #d94432;
+  --site-green: #306455;
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif;
+  --site-code-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --art-paper: #fcfcfa;
+  --art-grid: #d6dcd3;
+  --art-line: #ced5ca;
+}
+:root[data-theme='dark'] {
+  --site-link: #9bbdc4;
+  --site-accent: #f07b68;
+  --site-green: #98b7a8;
+  --site-code-font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  --art-paper: #141414;
+  --art-grid: #424242;
+  --art-line: #424242;
+}

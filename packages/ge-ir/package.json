@@ -1,0 +1,55 @@
+{
+  "name": "@galacean/ge-ir",
+  "version": "1.0.0",
+  "description": "Bidirectional Galacean Effects and Animation IR conversion with GE fidelity preservation",
+  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "prebuild": "pnpm clean",
+    "build": "pnpm build:declaration && pnpm build:module",
+    "build:module": "rollup -c --bundleConfigAsCjs",
+    "build:declaration": "tsc -b ../animation-ir tsconfig.json --emitDeclarationOnly",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@galacean/effects-specification": "catalog:",
+    "@galacean/animation-ir": "workspace:*",
+    "uuid": "catalog:"
+  },
+  "contributors": [
+    {
+      "name": "澄弈"
+    }
+  ],
+  "author": "Ant Group CO., Ltd.",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "https://github.com/galacean/design-bridge",
+  "bugs": {
+    "url": "https://github.com/galacean/design-bridge/issues"
+  },
+  "homepage": "https://github.com/galacean/design-bridge/tree/main/packages/ge-ir#readme",
+  "keywords": [
+    "animation",
+    "animation-ir",
+    "galacean-effects",
+    "jsonscene",
+    "converter"
+  ]
+}

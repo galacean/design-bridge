@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <line x1="10" y1="20" x2="100" y2="20" stroke="#000" stroke-width="2" stroke-dasharray="5 3"/>
+  <polygon points="10,140 100,140 100,180 10,180" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="5 3"/>
+  <rect x="10" y="40" width="50" height="30" fill="#1677ff" filter="url(#blur)"/>
+  <circle cx="200" cy="60" r="20" fill="none" stroke="#f00" marker-start="url(#arrow)"/>
+  <rect x="10" y="100" width="50" height="30" fill="none" stroke="#000" vector-effect="non-scaling-stroke"/>
+  <g transform="skewX(10)"><rect x="300" y="40" width="50" height="30" fill="#52c41a"/></g>
+</svg>

@@ -1,0 +1,15 @@
+{
+  "id": "openpencil-form",
+  "scriptPolicy": "disabled",
+  "viewport": {
+    "width": 800,
+    "height": 800
+  },
+  "targets": [
+    {
+      "id": "form",
+      "selector": ".fixture-shell",
+      "sceneName": "Section"
+    }
+  ]
+}

@@ -1,0 +1,676 @@
+{
+  "playerVersion": {
+    "web": "2.8.9",
+    "native": "0.0.1.202311221223"
+  },
+  "images": [
+    {
+      "url": "https://mdn.alipayobjects.com/mars/afts/file/A*2cZ3R5u2LZAAAAAAQWAAAAgAelB4AQ/original",
+      "id": "40faf9432d0c43b78bbc613e90ffab45",
+      "webp": "https://mdn.alipayobjects.com/mars/afts/file/A*Gr7YRZyp3r0AAAAAQYAAAAgAelB4AQ/original"
+    },
+    {
+      "url": "https://mdn.alipayobjects.com/mars/afts/file/A*9dGOR4sqmEUAAAAAQsAAAAgAelB4AQ/original",
+      "id": "d2e75f16d0cf4611bbe9d48f601d9cb2",
+      "webp": "https://mdn.alipayobjects.com/mars/afts/file/A*1We7Sa5zPmgAAAAAQKAAAAgAelB4AQ/original"
+    }
+  ],
+  "fonts": [],
+  "version": "3.6",
+  "plugins": [],
+  "type": "ge",
+  "compositions": [
+    {
+      "id": "d29cf6a536674dd5a2d7fe4bd468f4d8",
+      "name": "新建合成1",
+      "duration": 5,
+      "startTime": 0,
+      "endBehavior": 4,
+      "previewSize": [
+        750,
+        1624
+      ],
+      "camera": {
+        "fov": 60,
+        "far": 40,
+        "near": 0.1,
+        "clipMode": 1,
+        "position": [
+          0,
+          0,
+          8
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      },
+      "components": [
+        {
+          "id": "afb3dac3f69f40c1a514b7b391830bae"
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "afb3dac3f69f40c1a514b7b391830bae",
+      "item": {
+        "id": "d29cf6a536674dd5a2d7fe4bd468f4d8"
+      },
+      "dataType": "CompositionComponent",
+      "items": [
+        {
+          "id": "0d3ab5da01e943b282a05fe1696bd9f8"
+        },
+        {
+          "id": "5bf99de6f2fc4ccbb72e92e35d8b10e2"
+        },
+        {
+          "id": "5290075663dd4fdd92d3a674e67735d1"
+        },
+        {
+          "id": "c162cbda5e614f6d940a3eedca4a018f"
+        }
+      ],
+      "timelineAsset": {
+        "id": "68d0ac2c53514a1aa347608243121bb3"
+      },
+      "sceneBindings": [
+        {
+          "key": {
+            "id": "e7a3daa9f5914355832e8095e353dc25"
+          },
+          "value": {
+            "id": "0d3ab5da01e943b282a05fe1696bd9f8"
+          }
+        },
+        {
+          "key": {
+            "id": "71e5bdee07c14043902455ee6e5de450"
+          },
+          "value": {
+            "id": "5bf99de6f2fc4ccbb72e92e35d8b10e2"
+          }
+        },
+        {
+          "key": {
+            "id": "87bb1388d25b40019b4e95d07ea6c471"
+          },
+          "value": {
+            "id": "5290075663dd4fdd92d3a674e67735d1"
+          }
+        },
+        {
+          "key": {
+            "id": "715fe9808c694685a4952c66b241936b"
+          },
+          "value": {
+            "id": "c162cbda5e614f6d940a3eedca4a018f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "61f7a323ced047aa80a4a5faf1f7cb50",
+      "item": {
+        "id": "0d3ab5da01e943b282a05fe1696bd9f8"
+      },
+      "dataType": "SpriteComponent",
+      "options": {
+        "startColor": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "renderer": {
+        "renderMode": 1,
+        "texture": {
+          "id": "6bebfe6bfb4d44e2993e1556910035f8"
+        }
+      }
+    },
+    {
+      "id": "9bdf7de35198455faa8558a6b6794d59",
+      "item": {
+        "id": "5bf99de6f2fc4ccbb72e92e35d8b10e2"
+      },
+      "dataType": "SpriteComponent",
+      "options": {
+        "startColor": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "renderer": {
+        "renderMode": 1,
+        "texture": {
+          "id": "afa29b78677c47fca152c706d16efb6b"
+        }
+      }
+    },
+    {
+      "id": "4f0431255ac94291b28580bfd760e7fb",
+      "item": {
+        "id": "5290075663dd4fdd92d3a674e67735d1"
+      },
+      "dataType": "TextComponent",
+      "options": {
+        "text": "Galacean Effects 动效",
+        "fontFamily": "sans-serif",
+        "fontSize": 40,
+        "textColor": [
+          0.4392,
+          0.9177,
+          0.1843,
+          1
+        ],
+        "fontWeight": "normal",
+        "letterSpace": 0,
+        "textAlign": 1,
+        "fontStyle": "normal",
+        "autoWidth": false,
+        "textWidth": 545.5863,
+        "textHeight": 63,
+        "lineHeight": 62.86,
+        "size": [
+          6.71,
+          0.7748
+        ]
+      },
+      "renderer": {
+        "renderMode": 1
+      }
+    }
+  ],
+  "geometries": [],
+  "materials": [],
+  "items": [
+    {
+      "id": "0d3ab5da01e943b282a05fe1696bd9f8",
+      "name": "超人",
+      "duration": 5,
+      "type": "1",
+      "visible": true,
+      "endBehavior": 4,
+      "delay": 0,
+      "renderLevel": "B+",
+      "components": [
+        {
+          "id": "61f7a323ced047aa80a4a5faf1f7cb50"
+        }
+      ],
+      "transform": {
+        "position": {
+          "x": 0,
+          "y": 4.2397,
+          "z": 0
+        },
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchor": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "x": 3.6896,
+          "y": 4.7719
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        }
+      },
+      "dataType": "VFXItemData"
+    },
+    {
+      "id": "5bf99de6f2fc4ccbb72e92e35d8b10e2",
+      "name": "黄老实",
+      "duration": 5,
+      "type": "1",
+      "parentId": "c162cbda5e614f6d940a3eedca4a018f",
+      "visible": true,
+      "endBehavior": 4,
+      "delay": 0,
+      "renderLevel": "B+",
+      "components": [
+        {
+          "id": "9bdf7de35198455faa8558a6b6794d59"
+        }
+      ],
+      "transform": {
+        "position": {
+          "x": 0,
+          "y": -0.6612,
+          "z": 0
+        },
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchor": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "x": 5.0051,
+          "y": 5.0297
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        }
+      },
+      "dataType": "VFXItemData"
+    },
+    {
+      "id": "5290075663dd4fdd92d3a674e67735d1",
+      "name": "text_5",
+      "duration": 5,
+      "type": "text",
+      "visible": true,
+      "endBehavior": 4,
+      "delay": 0,
+      "renderLevel": "B+",
+      "transform": {
+        "position": {
+          "x": 0,
+          "y": -5.4355,
+          "z": 0
+        },
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "scale": {
+          "x": 6.71,
+          "y": 0.7748,
+          "z": 1
+        }
+      },
+      "components": [
+        {
+          "id": "4f0431255ac94291b28580bfd760e7fb"
+        }
+      ],
+      "dataType": "VFXItemData"
+    },
+    {
+      "id": "c162cbda5e614f6d940a3eedca4a018f",
+      "name": "null_4",
+      "duration": 5,
+      "type": "3",
+      "visible": true,
+      "endBehavior": 4,
+      "delay": 0,
+      "renderLevel": "B+",
+      "content": {
+        "options": {
+          "startColor": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "components": [],
+      "transform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        }
+      },
+      "dataType": "VFXItemData"
+    }
+  ],
+  "shaders": [],
+  "bins": [],
+  "textures": [
+    {
+      "id": "6bebfe6bfb4d44e2993e1556910035f8",
+      "source": {
+        "id": "40faf9432d0c43b78bbc613e90ffab45"
+      },
+      "flipY": true
+    },
+    {
+      "id": "afa29b78677c47fca152c706d16efb6b",
+      "source": {
+        "id": "d2e75f16d0cf4611bbe9d48f601d9cb2"
+      },
+      "flipY": true
+    }
+  ],
+  "animations": [],
+  "miscs": [
+    {
+      "id": "68d0ac2c53514a1aa347608243121bb3",
+      "dataType": "TimelineAsset",
+      "tracks": [
+        {
+          "id": "e7a3daa9f5914355832e8095e353dc25"
+        },
+        {
+          "id": "71e5bdee07c14043902455ee6e5de450"
+        },
+        {
+          "id": "87bb1388d25b40019b4e95d07ea6c471"
+        },
+        {
+          "id": "715fe9808c694685a4952c66b241936b"
+        }
+      ]
+    },
+    {
+      "id": "f7bd9b4a42374e0ab6527d0e303024e3",
+      "dataType": "ActivationPlayableAsset"
+    },
+    {
+      "id": "669c6c445f544264b5a33d4772eab754",
+      "dataType": "TransformPlayableAsset",
+      "positionOverLifetime": {}
+    },
+    {
+      "id": "4bde159908aa442298b8f030e36494c0",
+      "dataType": "SpriteColorPlayableAsset",
+      "startColor": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "4d462acae4c4441c8e84d0dcffecfb0c",
+      "dataType": "ActivationTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "f7bd9b4a42374e0ab6527d0e303024e3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eaa605dde20d417dbef3dd936e041530",
+      "dataType": "TransformTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "669c6c445f544264b5a33d4772eab754"
+          }
+        }
+      ]
+    },
+    {
+      "id": "160fb8768cb442789cdbc434c1e99b77",
+      "dataType": "SpriteColorTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "4bde159908aa442298b8f030e36494c0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e7a3daa9f5914355832e8095e353dc25",
+      "dataType": "ObjectBindingTrack",
+      "children": [
+        {
+          "id": "4d462acae4c4441c8e84d0dcffecfb0c"
+        },
+        {
+          "id": "eaa605dde20d417dbef3dd936e041530"
+        },
+        {
+          "id": "160fb8768cb442789cdbc434c1e99b77"
+        }
+      ],
+      "clips": []
+    },
+    {
+      "id": "8c1f9c8efca44860bafb84ec27370ade",
+      "dataType": "ActivationPlayableAsset"
+    },
+    {
+      "id": "ddea0c6c6850499aab33b68520e4cc08",
+      "dataType": "TransformPlayableAsset",
+      "positionOverLifetime": {}
+    },
+    {
+      "id": "3d0cb47466c04018a18117e3a7d48f84",
+      "dataType": "SpriteColorPlayableAsset",
+      "startColor": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "866b5758c6dd4fb9a9ebcddffa32a542",
+      "dataType": "ActivationTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "8c1f9c8efca44860bafb84ec27370ade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fad87ee4a7d04f67bee1b6b739d2ad6f",
+      "dataType": "TransformTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "ddea0c6c6850499aab33b68520e4cc08"
+          }
+        }
+      ]
+    },
+    {
+      "id": "49fac89a2c9f457ab807d5047692696d",
+      "dataType": "SpriteColorTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "3d0cb47466c04018a18117e3a7d48f84"
+          }
+        }
+      ]
+    },
+    {
+      "id": "71e5bdee07c14043902455ee6e5de450",
+      "dataType": "ObjectBindingTrack",
+      "children": [
+        {
+          "id": "866b5758c6dd4fb9a9ebcddffa32a542"
+        },
+        {
+          "id": "fad87ee4a7d04f67bee1b6b739d2ad6f"
+        },
+        {
+          "id": "49fac89a2c9f457ab807d5047692696d"
+        }
+      ],
+      "clips": []
+    },
+    {
+      "id": "47fa571228864322afb25f0d37572fa0",
+      "dataType": "ActivationPlayableAsset"
+    },
+    {
+      "id": "0956ec8f75164547b7358981614a339d",
+      "dataType": "TransformPlayableAsset",
+      "positionOverLifetime": {}
+    },
+    {
+      "id": "ac44e2709ce84557b5542949d739d676",
+      "dataType": "SpriteColorPlayableAsset"
+    },
+    {
+      "id": "655235b912c34552a0d4bab204523382",
+      "dataType": "ActivationTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "47fa571228864322afb25f0d37572fa0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c15e0b56e5e943a9bd53c57a45633f9a",
+      "dataType": "TransformTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "0956ec8f75164547b7358981614a339d"
+          }
+        }
+      ]
+    },
+    {
+      "id": "155288b40bc7472792b7946cf47629a4",
+      "dataType": "SpriteColorTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "ac44e2709ce84557b5542949d739d676"
+          }
+        }
+      ]
+    },
+    {
+      "id": "87bb1388d25b40019b4e95d07ea6c471",
+      "dataType": "ObjectBindingTrack",
+      "children": [
+        {
+          "id": "655235b912c34552a0d4bab204523382"
+        },
+        {
+          "id": "c15e0b56e5e943a9bd53c57a45633f9a"
+        },
+        {
+          "id": "155288b40bc7472792b7946cf47629a4"
+        }
+      ],
+      "clips": []
+    },
+    {
+      "id": "c24b1ac60ce24656a0e827c1088b4d11",
+      "dataType": "ActivationPlayableAsset"
+    },
+    {
+      "id": "533a20fef66040ae94bf960c3bee26ac",
+      "dataType": "TransformPlayableAsset",
+      "positionOverLifetime": {}
+    },
+    {
+      "id": "bbabdb5e635a403fb2561af25212a90d",
+      "dataType": "ActivationTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "c24b1ac60ce24656a0e827c1088b4d11"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2a286e13996a4e7281e004012d56222e",
+      "dataType": "TransformTrack",
+      "children": [],
+      "clips": [
+        {
+          "start": 0,
+          "duration": 5,
+          "endBehavior": 4,
+          "asset": {
+            "id": "533a20fef66040ae94bf960c3bee26ac"
+          }
+        }
+      ]
+    },
+    {
+      "id": "715fe9808c694685a4952c66b241936b",
+      "dataType": "ObjectBindingTrack",
+      "children": [
+        {
+          "id": "bbabdb5e635a403fb2561af25212a90d"
+        },
+        {
+          "id": "2a286e13996a4e7281e004012d56222e"
+        }
+      ],
+      "clips": []
+    }
+  ],
+  "compositionId": "d29cf6a536674dd5a2d7fe4bd468f4d8"
+}

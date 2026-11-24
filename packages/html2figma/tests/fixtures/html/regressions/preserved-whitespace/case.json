@@ -1,0 +1,12 @@
+{
+  "id": "preserved-whitespace",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 600, "height": 430 },
+  "resources": { "/__e2e/roboto-latin-400-normal.woff2": "assets/roboto-latin-400-normal.woff2" },
+  "targets": [
+    { "id": "pre", "selector": "#pre", "sceneName": "pre" },
+    { "id": "prewrap", "selector": "#prewrap", "sceneName": "prewrap" },
+    { "id": "breakspaces", "selector": "#breakspaces", "sceneName": "breakspaces" },
+    { "id": "normal", "selector": "#normal", "sceneName": "normal" }
+  ]
+}

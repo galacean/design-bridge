@@ -1,0 +1,722 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GE layer generation > derives a pivot container from off-center geometry and animated rotation 1`] = `
+{
+  "animations": [],
+  "bins": [],
+  "components": [
+    {
+      "dataType": "SpriteComponent",
+      "id": "00000000000000000000000000000015",
+      "item": {
+        "id": "00000000000000000000000000000007",
+      },
+      "options": {
+        "startColor": [
+          1,
+          1,
+          1,
+          1,
+        ],
+      },
+      "renderer": {
+        "renderMode": 1,
+        "texture": {
+          "id": "00000000000000000000000000000017",
+        },
+      },
+    },
+    {
+      "dataType": "CompositionComponent",
+      "id": "00000000000000000000000000000019",
+      "item": {
+        "id": "test-composition",
+      },
+      "sceneBindings": [
+        {
+          "key": {
+            "id": "00000000000000000000000000000008",
+          },
+          "value": {
+            "id": "00000000000000000000000000000007",
+          },
+        },
+        {
+          "key": {
+            "id": "00000000000000000000000000000002",
+          },
+          "value": {
+            "id": "00000000000000000000000000000001",
+          },
+        },
+      ],
+      "timelineAsset": {
+        "id": "00000000000000000000000000000018",
+      },
+    },
+  ],
+  "compositionId": "test-composition",
+  "compositions": [
+    {
+      "camera": {
+        "clipMode": 1,
+        "far": 40,
+        "fov": 60,
+        "near": 0.1,
+        "position": [
+          0,
+          0,
+          8,
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+        ],
+      },
+      "children": [
+        {
+          "id": "00000000000000000000000000000001",
+        },
+      ],
+      "components": [
+        {
+          "id": "00000000000000000000000000000019",
+        },
+      ],
+      "duration": 3,
+      "endBehavior": 5,
+      "id": "test-composition",
+      "name": "test",
+      "previewSize": [
+        720,
+        1280,
+      ],
+      "startTime": 0,
+    },
+  ],
+  "fonts": [],
+  "geometries": [],
+  "images": [
+    {
+      "id": "00000000000000000000000000000016",
+      "url": "https://example.com/icon.png",
+    },
+  ],
+  "items": [
+    {
+      "children": [],
+      "components": [
+        {
+          "id": "00000000000000000000000000000015",
+        },
+      ],
+      "dataType": "VFXItemData",
+      "delay": 0,
+      "duration": 3,
+      "endBehavior": 0,
+      "id": "00000000000000000000000000000007",
+      "name": "icon",
+      "parentId": "00000000000000000000000000000001",
+      "renderLevel": "B+",
+      "transform": {
+        "anchor": {
+          "x": 0,
+          "y": 0,
+        },
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+        },
+        "position": {
+          "x": 0.5132713503907784,
+          "y": -0.5132713503907784,
+          "z": 0,
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1,
+        },
+        "size": {
+          "x": 1.2832,
+          "y": 1.2832,
+        },
+      },
+      "type": "1",
+      "visible": true,
+    },
+    {
+      "children": [
+        {
+          "id": "00000000000000000000000000000007",
+        },
+      ],
+      "components": [],
+      "content": {
+        "options": {
+          "startColor": [
+            1,
+            1,
+            1,
+            1,
+          ],
+        },
+      },
+      "dataType": "VFXItemData",
+      "delay": 0,
+      "duration": 3,
+      "endBehavior": 4,
+      "id": "00000000000000000000000000000001",
+      "name": "icon",
+      "renderLevel": "B+",
+      "transform": {
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+        },
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1,
+        },
+      },
+      "type": "3",
+      "visible": true,
+    },
+  ],
+  "materials": [],
+  "miscs": [
+    {
+      "dataType": "ActivationPlayableAsset",
+      "id": "00000000000000000000000000000003",
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000003",
+          },
+          "duration": 3,
+          "endBehavior": 4,
+          "start": 0,
+        },
+      ],
+      "dataType": "ActivationTrack",
+      "id": "00000000000000000000000000000004",
+    },
+    {
+      "dataType": "TransformPlayableAsset",
+      "id": "00000000000000000000000000000005",
+      "positionOverLifetime": {},
+      "rotationOverLifetime": {
+        "asRotation": true,
+        "z": [
+          21,
+          [
+            [
+              3,
+              [
+                0,
+                0,
+                0.33,
+                0,
+              ],
+              3,
+            ],
+            [
+              2,
+              [
+                0.67,
+                360,
+                1,
+                360,
+              ],
+              2,
+            ],
+          ],
+        ],
+      },
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000005",
+          },
+          "duration": 3,
+          "endBehavior": 4,
+          "start": 0,
+        },
+      ],
+      "dataType": "TransformTrack",
+      "id": "00000000000000000000000000000006",
+    },
+    {
+      "children": [
+        {
+          "id": "00000000000000000000000000000004",
+        },
+        {
+          "id": "00000000000000000000000000000006",
+        },
+      ],
+      "clips": [],
+      "dataType": "ObjectBindingTrack",
+      "id": "00000000000000000000000000000002",
+    },
+    {
+      "dataType": "ActivationPlayableAsset",
+      "id": "00000000000000000000000000000009",
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000009",
+          },
+          "duration": 3,
+          "endBehavior": 0,
+          "start": 0,
+        },
+      ],
+      "dataType": "ActivationTrack",
+      "id": "00000000000000000000000000000010",
+    },
+    {
+      "dataType": "TransformPlayableAsset",
+      "id": "00000000000000000000000000000011",
+      "positionOverLifetime": {},
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000011",
+          },
+          "duration": 3,
+          "endBehavior": 0,
+          "start": 0,
+        },
+      ],
+      "dataType": "TransformTrack",
+      "id": "00000000000000000000000000000012",
+    },
+    {
+      "dataType": "SpriteColorPlayableAsset",
+      "id": "00000000000000000000000000000013",
+      "startColor": [
+        1,
+        1,
+        1,
+        1,
+      ],
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000013",
+          },
+          "duration": 3,
+          "endBehavior": 0,
+          "start": 0,
+        },
+      ],
+      "dataType": "SpriteColorTrack",
+      "id": "00000000000000000000000000000014",
+    },
+    {
+      "children": [
+        {
+          "id": "00000000000000000000000000000010",
+        },
+        {
+          "id": "00000000000000000000000000000012",
+        },
+        {
+          "id": "00000000000000000000000000000014",
+        },
+      ],
+      "clips": [],
+      "dataType": "ObjectBindingTrack",
+      "id": "00000000000000000000000000000008",
+    },
+    {
+      "dataType": "TimelineAsset",
+      "id": "00000000000000000000000000000018",
+      "tracks": [
+        {
+          "id": "00000000000000000000000000000008",
+        },
+        {
+          "id": "00000000000000000000000000000002",
+        },
+      ],
+    },
+  ],
+  "playerVersion": {
+    "native": "0.0.1.202311221223",
+    "web": "2.11.0-alpha.1",
+  },
+  "plugins": [],
+  "shaders": [],
+  "textures": [
+    {
+      "dataType": "Texture",
+      "flipY": true,
+      "id": "00000000000000000000000000000017",
+      "source": {
+        "id": "00000000000000000000000000000016",
+      },
+    },
+  ],
+  "type": "ge",
+  "version": "3.7",
+}
+`;
+
+exports[`convertIRToGE > generates a valid empty scene 1`] = `
+{
+  "animations": [],
+  "bins": [],
+  "components": [
+    {
+      "dataType": "CompositionComponent",
+      "id": "00000000000000000000000000000002",
+      "item": {
+        "id": "test-composition",
+      },
+      "sceneBindings": [],
+      "timelineAsset": {
+        "id": "00000000000000000000000000000001",
+      },
+    },
+  ],
+  "compositionId": "test-composition",
+  "compositions": [
+    {
+      "camera": {
+        "clipMode": 1,
+        "far": 40,
+        "fov": 60,
+        "near": 0.1,
+        "position": [
+          0,
+          0,
+          8,
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+        ],
+      },
+      "children": [],
+      "components": [
+        {
+          "id": "00000000000000000000000000000002",
+        },
+      ],
+      "duration": 3,
+      "endBehavior": 5,
+      "id": "test-composition",
+      "name": "test",
+      "previewSize": [
+        720,
+        1280,
+      ],
+      "startTime": 0,
+    },
+  ],
+  "fonts": [],
+  "geometries": [],
+  "images": [],
+  "items": [],
+  "materials": [],
+  "miscs": [
+    {
+      "dataType": "TimelineAsset",
+      "id": "00000000000000000000000000000001",
+      "tracks": [],
+    },
+  ],
+  "playerVersion": {
+    "native": "0.0.1.202311221223",
+    "web": "2.11.0-alpha.1",
+  },
+  "plugins": [],
+  "shaders": [],
+  "textures": [],
+  "type": "ge",
+  "version": "3.7",
+}
+`;
+
+exports[`convertIRToGE > generates an image scene 1`] = `
+{
+  "animations": [],
+  "bins": [],
+  "components": [
+    {
+      "dataType": "SpriteComponent",
+      "id": "00000000000000000000000000000009",
+      "item": {
+        "id": "00000000000000000000000000000001",
+      },
+      "options": {
+        "startColor": [
+          1,
+          1,
+          1,
+          1,
+        ],
+      },
+      "renderer": {
+        "anchor": [
+          0,
+          0,
+        ],
+        "renderMode": 1,
+        "texture": {
+          "id": "00000000000000000000000000000011",
+        },
+      },
+    },
+    {
+      "dataType": "CompositionComponent",
+      "id": "00000000000000000000000000000013",
+      "item": {
+        "id": "test-composition",
+      },
+      "sceneBindings": [
+        {
+          "key": {
+            "id": "00000000000000000000000000000002",
+          },
+          "value": {
+            "id": "00000000000000000000000000000001",
+          },
+        },
+      ],
+      "timelineAsset": {
+        "id": "00000000000000000000000000000012",
+      },
+    },
+  ],
+  "compositionId": "test-composition",
+  "compositions": [
+    {
+      "camera": {
+        "clipMode": 1,
+        "far": 40,
+        "fov": 60,
+        "near": 0.1,
+        "position": [
+          0,
+          0,
+          8,
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+        ],
+      },
+      "children": [
+        {
+          "id": "00000000000000000000000000000001",
+        },
+      ],
+      "components": [
+        {
+          "id": "00000000000000000000000000000013",
+        },
+      ],
+      "duration": 3,
+      "endBehavior": 5,
+      "id": "test-composition",
+      "name": "test",
+      "previewSize": [
+        720,
+        1280,
+      ],
+      "startTime": 0,
+    },
+  ],
+  "fonts": [],
+  "geometries": [],
+  "images": [
+    {
+      "id": "00000000000000000000000000000010",
+      "url": "https://example.com/bg.png",
+    },
+  ],
+  "items": [
+    {
+      "children": [],
+      "components": [
+        {
+          "id": "00000000000000000000000000000009",
+        },
+      ],
+      "dataType": "VFXItemData",
+      "delay": 0,
+      "duration": 3,
+      "endBehavior": 0,
+      "id": "00000000000000000000000000000001",
+      "name": "bg",
+      "renderLevel": "B+",
+      "transform": {
+        "anchor": {
+          "x": 0,
+          "y": 0,
+        },
+        "eulerHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+        },
+        "position": {
+          "x": 4.619442153517006,
+          "y": -8.212341606252455,
+          "z": 0,
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1,
+        },
+        "size": {
+          "x": 9.2389,
+          "y": 16.4247,
+        },
+      },
+      "type": "1",
+      "visible": true,
+    },
+  ],
+  "materials": [],
+  "miscs": [
+    {
+      "dataType": "ActivationPlayableAsset",
+      "id": "00000000000000000000000000000003",
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000003",
+          },
+          "duration": 3,
+          "endBehavior": 0,
+          "start": 0,
+        },
+      ],
+      "dataType": "ActivationTrack",
+      "id": "00000000000000000000000000000004",
+    },
+    {
+      "dataType": "TransformPlayableAsset",
+      "id": "00000000000000000000000000000005",
+      "positionOverLifetime": {},
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000005",
+          },
+          "duration": 3,
+          "endBehavior": 0,
+          "start": 0,
+        },
+      ],
+      "dataType": "TransformTrack",
+      "id": "00000000000000000000000000000006",
+    },
+    {
+      "dataType": "SpriteColorPlayableAsset",
+      "id": "00000000000000000000000000000007",
+      "startColor": [
+        1,
+        1,
+        1,
+        1,
+      ],
+    },
+    {
+      "children": [],
+      "clips": [
+        {
+          "asset": {
+            "id": "00000000000000000000000000000007",
+          },
+          "duration": 3,
+          "endBehavior": 0,
+          "start": 0,
+        },
+      ],
+      "dataType": "SpriteColorTrack",
+      "id": "00000000000000000000000000000008",
+    },
+    {
+      "children": [
+        {
+          "id": "00000000000000000000000000000004",
+        },
+        {
+          "id": "00000000000000000000000000000006",
+        },
+        {
+          "id": "00000000000000000000000000000008",
+        },
+      ],
+      "clips": [],
+      "dataType": "ObjectBindingTrack",
+      "id": "00000000000000000000000000000002",
+    },
+    {
+      "dataType": "TimelineAsset",
+      "id": "00000000000000000000000000000012",
+      "tracks": [
+        {
+          "id": "00000000000000000000000000000002",
+        },
+      ],
+    },
+  ],
+  "playerVersion": {
+    "native": "0.0.1.202311221223",
+    "web": "2.11.0-alpha.1",
+  },
+  "plugins": [],
+  "shaders": [],
+  "textures": [
+    {
+      "dataType": "Texture",
+      "flipY": true,
+      "id": "00000000000000000000000000000011",
+      "source": {
+        "id": "00000000000000000000000000000010",
+      },
+    },
+  ],
+  "type": "ge",
+  "version": "3.7",
+}
+`;

@@ -1,0 +1,13 @@
+{
+  "id": "gradient-direction",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 600, "height": 320 },
+  "targets": [
+    { "id": "zero", "selector": "#zero", "sceneName": "zero" },
+    { "id": "top", "selector": "#top", "sceneName": "top" },
+    { "id": "full", "selector": "#full", "sceneName": "full" },
+    { "id": "bottom", "selector": "#bottom", "sceneName": "bottom" },
+    { "id": "mask-zero", "selector": "#mask-zero", "sceneName": "mask-zero", "requiresImage": true },
+    { "id": "mask-full", "selector": "#mask-full", "sceneName": "mask-full", "requiresImage": true }
+  ]
+}

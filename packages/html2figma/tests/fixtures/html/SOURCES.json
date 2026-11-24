@@ -1,0 +1,99 @@
+{
+  "upstreams": [
+    {
+      "repository": "https://github.com/open-pencil/open-pencil",
+      "commit": "7a37f14327815ef8056fe582e08856a1ecdc076f",
+      "license": "MIT",
+      "notice": "upstream/openpencil/LICENSE",
+      "source": "tests/helpers/dom-css.ts",
+      "symbols": [
+        "cssCardHTML",
+        "cssCardCSS",
+        "fixtureMatrixHTML",
+        "fixtureMatrixCSS"
+      ],
+      "adaptations": [
+        "Wrap HTML and resolved CSS templates in standalone documents.",
+        "Normalize trailing blank lines in generated wrappers and the license copy."
+      ]
+    },
+    {
+      "repository": "https://github.com/Natumsol/html2figma",
+      "commit": "db408b4ca5a11340ceb2e46a5d3d36d4e3753738",
+      "license": "MIT",
+      "licenseEvidence": "package.json",
+      "notice": "upstream/natumsol/NOTICE.md",
+      "files": [
+        {
+          "file": "upstream/natumsol/elements/index.html",
+          "upstream": "e2e/fixtures/fidelity.html",
+          "sha256": "b3e3083ecd545157b30ca3149e6896d4a8941e0927051cc0df4957dbe582f482",
+          "upstreamSha256": "b3e3083ecd545157b30ca3149e6896d4a8941e0927051cc0df4957dbe582f482"
+        },
+        {
+          "file": "upstream/natumsol/elements/upstream-cases.json",
+          "upstream": "e2e/visual/fidelity-cases.json",
+          "sha256": "52649c53dfc9862c8dc80bacaf28b021b0ca629ddd86a901bac53dc50c7bc630",
+          "upstreamSha256": "52649c53dfc9862c8dc80bacaf28b021b0ca629ddd86a901bac53dc50c7bc630"
+        },
+        {
+          "file": "upstream/natumsol/composites/index.html",
+          "upstream": "e2e/fixtures/visual.html",
+          "sha256": "3f2b59d19a21879bfde660099a3fe187127ceae73ddfd5b4225cae121a6aa04b",
+          "upstreamSha256": "3f2b59d19a21879bfde660099a3fe187127ceae73ddfd5b4225cae121a6aa04b"
+        },
+        {
+          "file": "upstream/natumsol/composites/upstream-cases.json",
+          "upstream": "e2e/visual/cases.json",
+          "sha256": "4019641e0f367a16ebbb26112374a914d9eb72582fd46a75ad5b437a5a2801b4",
+          "upstreamSha256": "4019641e0f367a16ebbb26112374a914d9eb72582fd46a75ad5b437a5a2801b4"
+        },
+        {
+          "file": "assets/fidelity-product.png",
+          "upstream": "e2e/fixtures/fidelity-product.png",
+          "sha256": "d01427877a0a3c711110c9e70fd1d9cf351f5a183e99864697d79354434aea7f",
+          "upstreamSha256": "d01427877a0a3c711110c9e70fd1d9cf351f5a183e99864697d79354434aea7f"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "file": "assets/inter-latin-400-normal.woff2",
+      "source": "@fontsource/inter@4.5.15/files/inter-latin-400-normal.woff2",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "assets/inter-latin-700-normal.woff2",
+      "source": "@fontsource/inter@4.5.15/files/inter-latin-700-normal.woff2",
+      "license": "OFL-1.1"
+    },
+    {
+      "file": "assets/roboto-latin-400-normal.woff2",
+      "source": "@fontsource/roboto@4.5.8/files/roboto-latin-400-normal.woff2",
+      "license": "Apache-2.0",
+      "notice": "assets/ROBOTO-NOTICE.txt"
+    },
+    {
+      "file": "assets/roboto-latin-400-italic.woff2",
+      "source": "@fontsource/roboto@4.5.8/files/roboto-latin-400-italic.woff2",
+      "license": "Apache-2.0",
+      "notice": "assets/ROBOTO-NOTICE.txt"
+    },
+    {
+      "file": "assets/roboto-latin-700-italic.woff2",
+      "source": "@fontsource/roboto@4.5.8/files/roboto-latin-700-italic.woff2",
+      "license": "Apache-2.0",
+      "notice": "assets/ROBOTO-NOTICE.txt"
+    }
+  ],
+  "checksums": {
+    "upstream/openpencil/card/index.html": "dca316d45c70320f24a26d1627504c67d002b5c3bc7e21da97f034fc2675653c",
+    "upstream/openpencil/form/index.html": "4b5a110548bab5c7747cb9cf573b0f74c109aec14b6ce3646fd6aab22c9f7946",
+    "assets/inter-latin-400-normal.woff2": "0364d368abf457d4e70dbc7a7a360f3486eaea2837b194915b23d4398bee91ac",
+    "assets/inter-latin-700-normal.woff2": "ced2d8e02e2fbf08d2edec9b5f13648ed8348588a05f7181632f3c1dd6e1f5c3",
+    "assets/roboto-latin-400-normal.woff2": "f6734f8177112c0839b961f96d813fcb189d81b60e96c33278c1983b6f419615",
+    "assets/roboto-latin-400-italic.woff2": "db0424fb67fb52e7e538490240cc7fb9c05aa076333a4968f3dee30b825dabf9",
+    "assets/roboto-latin-700-italic.woff2": "6be97ca17228a69c406231d89c003194c3dfba7401eaa9fe9e9ed0ef1c18dc38"
+  }
+}

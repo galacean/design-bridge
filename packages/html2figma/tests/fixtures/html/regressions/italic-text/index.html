@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: Roboto; font-weight: 400; font-style: normal;
+    src: url('/__e2e/roboto-latin-400-normal.woff2');
+  }
+  @font-face {
+    font-family: Roboto; font-weight: 400; font-style: italic;
+    src: url('/__e2e/roboto-latin-400-italic.woff2');
+  }
+  @font-face {
+    font-family: Roboto; font-weight: 700; font-style: italic;
+    src: url('/__e2e/roboto-latin-700-italic.woff2');
+  }
+  body { margin: 0; padding: 20px; font: 24px/36px Roboto, sans-serif; background: white; }
+  section { margin-bottom: 16px; }
+  #italic, #bold-italic, #wrapped-italic { font-style: italic; }
+  #bold-italic { font-weight: 700; }
+  #wrapped-italic { width: 260px; }
+  p { margin: 0; }
+</style>
+<section id="regular"><span>Regular AV Wavy text 12345</span></section>
+<section id="italic"><span>Italic AV Wavy text 12345</span></section>
+<section id="bold-italic"><span>Bold AV Wavy text 12345</span></section>
+<section id="wrapped-italic"><p>Italic words wrap onto several measured rows.</p></section>
+</html>

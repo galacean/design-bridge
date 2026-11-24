@@ -1,0 +1,75 @@
+.ui-home {
+  --home-max-width: 1440px;
+  --workbench-bg: var(--bg);
+  --workbench-surface: var(--s1);
+  position: relative;
+}
+
+.ui-home-shell {
+  max-width: var(--home-max-width);
+  padding: calc(var(--space-5) * 2) calc(var(--space-4) * 2);
+}
+
+.ui-home-header {
+  margin-bottom: calc(var(--space-5) + var(--space-4));
+}
+
+.ui-home-title {
+  color: var(--color-text-emphasis);
+  font-size: var(--text-title);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.03em;
+}
+
+.ui-home-intro {
+  color: var(--workbench-muted);
+  font-size: var(--text-ui);
+  line-height: var(--lh-body);
+}
+
+.ui-home-section-header {
+  border-bottom: 1px solid var(--workbench-border);
+  padding-bottom: var(--space-4);
+}
+
+.ui-home-section-title {
+  color: var(--color-text-emphasis);
+  font-size: var(--text-h3);
+  line-height: var(--lh-tight);
+}
+
+.ui-home-section-desc {
+  color: var(--workbench-muted);
+  font-size: var(--text-caption);
+  line-height: var(--lh-body);
+}
+
+.ui-home .ui-nav-card {
+  min-height: calc(var(--control-md) * 2 + var(--space-5));
+  padding: calc(var(--space-4) + var(--space-1));
+}
+
+.ui-home .ui-nav-card:hover {
+  background: var(--s2);
+  border-color: var(--border2);
+}
+
+.ui-home .ui-nav-card-input {
+  height: var(--control-md);
+  min-width: var(--control-md);
+  border-radius: var(--workbench-control-radius);
+}
+
+.ui-home .ui-nav-card-head {
+  margin-bottom: var(--space-2);
+}
+
+.ui-home .ui-nav-card-arrow {
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .ui-home-shell {
+    padding: var(--space-5) var(--space-4);
+  }
+}

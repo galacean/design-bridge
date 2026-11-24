@@ -1,0 +1,25 @@
+.bundle-workbench-grid {
+  grid-template-columns: 200px minmax(280px, 1fr) minmax(300px, 1.15fr);
+}
+
+@media (min-width: 900px) {
+  .bundle-workbench {
+    height: 100dvh;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 899px) {
+  .bundle-workbench-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .bundle-workbench-grid > aside {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .bundle-workbench-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

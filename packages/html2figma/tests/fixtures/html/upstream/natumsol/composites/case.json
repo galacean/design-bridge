@@ -1,0 +1,86 @@
+{
+  "id": "natumsol-composites",
+  "scriptPolicy": "trusted",
+  "viewport": {
+    "width": 800,
+    "height": 800
+  },
+  "resources": {
+    "/__e2e/inter-latin-400-normal.woff2": "assets/inter-latin-400-normal.woff2",
+    "/__e2e/inter-latin-700-normal.woff2": "assets/inter-latin-700-normal.woff2"
+  },
+  "targets": [
+    {
+      "id": "geometry",
+      "selector": "#geometry",
+      "sceneName": "geometry",
+      "requiresImage": false
+    },
+    {
+      "id": "flex-border",
+      "selector": "#flex-border",
+      "sceneName": "flex-border",
+      "requiresImage": false
+    },
+    {
+      "id": "typography",
+      "selector": "#typography",
+      "sceneName": "typography",
+      "requiresImage": false
+    },
+    {
+      "id": "flex-reverse",
+      "selector": "#flex-reverse",
+      "sceneName": "flex-reverse",
+      "requiresImage": false
+    },
+    {
+      "id": "flex-absolute",
+      "selector": "#flex-absolute",
+      "sceneName": "flex-absolute",
+      "requiresImage": false
+    },
+    {
+      "id": "media",
+      "selector": "#media",
+      "sceneName": "media",
+      "requiresImage": true
+    },
+    {
+      "id": "edge-borders",
+      "selector": "#edge-borders",
+      "sceneName": "edge-borders",
+      "requiresImage": false
+    },
+    {
+      "id": "text-transform",
+      "selector": "#text-transform",
+      "sceneName": "text-transform",
+      "requiresImage": false
+    },
+    {
+      "id": "background-image",
+      "selector": "#background-image",
+      "sceneName": "background-image",
+      "requiresImage": true
+    },
+    {
+      "id": "video-poster",
+      "selector": "#video-poster",
+      "sceneName": "video-poster",
+      "requiresImage": true
+    },
+    {
+      "id": "flex-wrap",
+      "selector": "#flex-wrap",
+      "sceneName": "flex-wrap",
+      "requiresImage": false
+    },
+    {
+      "id": "shadow-dom",
+      "selector": "#shadow-dom",
+      "sceneName": "shadow-dom",
+      "requiresImage": false
+    }
+  ]
+}

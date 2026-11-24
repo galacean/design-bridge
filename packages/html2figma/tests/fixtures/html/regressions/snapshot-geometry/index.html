@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px; background: white; }
+  section { width: 360px; height: 100px; margin-bottom: 20px; }
+  #offset { padding: 20px; }
+  #block { width: 100px; height: 50px; background: #0066ff; }
+  #clip { display: block; width: 100px; height: 50px; padding: 0; border: 0; overflow: hidden; }
+  #overflow { width: 180px; height: 80px; background: #cc0033; }
+</style>
+<section id="offset"><div id="block"></div></section>
+<section id="clip-stage"><button id="clip" aria-label="Clipped button"><div id="overflow"></div></button></section>
+</html>

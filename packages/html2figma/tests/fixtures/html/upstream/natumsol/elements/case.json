@@ -1,0 +1,153 @@
+{
+  "id": "natumsol-elements",
+  "scriptPolicy": "trusted",
+  "viewport": {
+    "width": 800,
+    "height": 800
+  },
+  "resources": {
+    "/__e2e/fidelity-product.png": "assets/fidelity-product.png",
+    "/__e2e/inter-latin-400-normal.woff2": "assets/inter-latin-400-normal.woff2",
+    "/__e2e/inter-latin-700-normal.woff2": "assets/inter-latin-700-normal.woff2"
+  },
+  "targets": [
+    {
+      "id": "div-radius-opacity",
+      "selector": "#div-radius-opacity",
+      "sceneName": "div-radius-opacity",
+      "requiresImage": false
+    },
+    {
+      "id": "div-shadow",
+      "selector": "#div-shadow",
+      "sceneName": "div-shadow",
+      "requiresImage": false
+    },
+    {
+      "id": "div-flex",
+      "selector": "#div-flex",
+      "sceneName": "div-flex",
+      "requiresImage": false
+    },
+    {
+      "id": "article-card",
+      "selector": "#article-card",
+      "sceneName": "article-card",
+      "requiresImage": false
+    },
+    {
+      "id": "article-flex",
+      "selector": "#article-flex",
+      "sceneName": "article-flex",
+      "requiresImage": false
+    },
+    {
+      "id": "span-badge",
+      "selector": "#span-badge",
+      "sceneName": "span-badge",
+      "requiresImage": false
+    },
+    {
+      "id": "span-inline",
+      "selector": "#span-inline",
+      "sceneName": "span-inline",
+      "requiresImage": false
+    },
+    {
+      "id": "p-line-height",
+      "selector": "#p-line-height",
+      "sceneName": "p-line-height",
+      "requiresImage": false
+    },
+    {
+      "id": "p-centered",
+      "selector": "#p-centered",
+      "sceneName": "p-centered",
+      "requiresImage": false
+    },
+    {
+      "id": "p-bold",
+      "selector": "#p-bold",
+      "sceneName": "p-bold",
+      "requiresImage": false
+    },
+    {
+      "id": "p-italic",
+      "selector": "#p-italic",
+      "sceneName": "p-italic",
+      "requiresImage": false
+    },
+    {
+      "id": "p-wrap",
+      "selector": "#p-wrap",
+      "sceneName": "p-wrap",
+      "requiresImage": false
+    },
+    {
+      "id": "p-right",
+      "selector": "#p-right",
+      "sceneName": "p-right",
+      "requiresImage": false
+    },
+    {
+      "id": "span-strike",
+      "selector": "#span-strike",
+      "sceneName": "span-strike",
+      "requiresImage": false
+    },
+    {
+      "id": "p-lowercase",
+      "selector": "#p-lowercase",
+      "sceneName": "p-lowercase",
+      "requiresImage": false
+    },
+    {
+      "id": "p-capitalize",
+      "selector": "#p-capitalize",
+      "sceneName": "p-capitalize",
+      "requiresImage": false
+    },
+    {
+      "id": "p-font-fallback",
+      "selector": "#p-font-fallback",
+      "sceneName": "p-font-fallback",
+      "requiresImage": false
+    },
+    {
+      "id": "svg-fill",
+      "selector": "#svg-fill",
+      "sceneName": "svg-fill",
+      "requiresImage": false
+    },
+    {
+      "id": "svg-stroke",
+      "selector": "#svg-stroke",
+      "sceneName": "svg-stroke",
+      "requiresImage": false
+    },
+    {
+      "id": "img-cover",
+      "selector": "#img-cover",
+      "sceneName": "img-cover",
+      "requiresImage": true
+    },
+    {
+      "id": "img-contain",
+      "selector": "#img-contain",
+      "sceneName": "img-contain",
+      "requiresImage": true
+    },
+    {
+      "id": "canvas-pixels",
+      "selector": "#canvas-pixels",
+      "sceneName": "canvas-pixels",
+      "requiresImage": true
+    },
+    {
+      "id": "canvas-opacity",
+      "selector": "#canvas-opacity",
+      "sceneName": "canvas-opacity",
+      "requiresImage": true
+    }
+  ]
+}

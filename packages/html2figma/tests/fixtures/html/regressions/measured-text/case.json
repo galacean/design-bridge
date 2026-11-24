@@ -1,0 +1,16 @@
+{
+  "id": "measured-text",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 480, "height": 800 },
+  "resources": {
+    "/__e2e/inter-latin-400-normal.woff2": "assets/inter-latin-400-normal.woff2",
+    "/__e2e/inter-latin-700-normal.woff2": "assets/inter-latin-700-normal.woff2"
+  },
+  "targets": [
+    { "id": "wrap", "selector": "#wrap", "sceneName": "wrap" },
+    { "id": "tracking", "selector": "#tracking", "sceneName": "tracking" },
+    { "id": "center", "selector": "#center", "sceneName": "center" },
+    { "id": "bold", "selector": "#bold", "sceneName": "bold" },
+    { "id": "fallback", "selector": "#fallback", "sceneName": "fallback" }
+  ]
+}

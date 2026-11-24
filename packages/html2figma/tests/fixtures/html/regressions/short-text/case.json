@@ -1,0 +1,7 @@
+{
+  "id": "short-text",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 320, "height": 200 },
+  "resources": { "/__e2e/inter-latin-400-normal.woff2": "assets/inter-latin-400-normal.woff2" },
+  "targets": [{ "id": "short-text", "selector": "#short-text", "sceneName": "short-text" }]
+}

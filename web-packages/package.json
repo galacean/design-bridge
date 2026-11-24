@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "name": "web-packages",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test:dsl-validator": "pnpm --filter @galacean/dsl-ir exec vitest run tests/validator.test.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@ffmpeg/ffmpeg": "catalog:",
+    "@galacean/effects": "catalog:",
+    "@galacean/effects-plugin-ffd": "catalog:",
+    "@galacean/effects-plugin-model": "catalog:",
+    "@galacean/effects-plugin-multimedia": "catalog:",
+    "@galacean/effects-plugin-rich-text": "catalog:",
+    "@galacean/effects-plugin-spine": "catalog:",
+    "@galacean/effects-specification": "catalog:",
+    "@galacean/figma2ge": "workspace:*",
+    "@galacean/dsl-ir": "workspace:*",
+    "@galacean/ge-ir": "workspace:*",
+    "@galacean/html2figma": "workspace:*",
+    "@galacean/lottie2ir": "workspace:*",
+    "@galacean/shader2ge": "workspace:*",
+    "@galacean/svg2ir": "workspace:*",
+    "adm-zip": "^0.5.16",
+    "lottie-web": "^5.12.2",
+    "multer": "^2.0.2",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "jszip": "catalog:",
+    "tailwindcss": "^4.2.2"
+  }
+}

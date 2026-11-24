@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<style>
+  body { margin: 0; padding: 20px; display: grid; grid-template-columns: repeat(4, 120px); gap: 20px; background: white; }
+  div, img { display: block; width: 120px; height: 120px; }
+  #zero { background: linear-gradient(0deg, #ff0000, #0000ff); }
+  #top { background: linear-gradient(to top, #ff0000, #0000ff); }
+  #full { background: linear-gradient(360deg, #ff0000, #0000ff); }
+  #bottom { background: linear-gradient(180deg, #ff0000, #0000ff); }
+  #mask-zero { mask-image: linear-gradient(0deg, #000000, transparent); }
+  #mask-full { mask-image: linear-gradient(360deg, #000000, transparent); }
+</style>
+<div id="zero"></div><div id="top"></div><div id="full"></div><div id="bottom"></div>
+<img id="mask-zero" alt="mask-zero" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8AQMAAACXY+zrAAAAA1BMVEUAZv+53x52AAAAEUlEQVQoz2NgGAWjYBQMVQAAA8AAAXZcbLQAAAAASUVORK5CYII=">
+<img id="mask-full" alt="mask-full" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8AQMAAACXY+zrAAAAA1BMVEUAZv+53x52AAAAEUlEQVQoz2NgGAWjYBQMVQAAA8AAAXZcbLQAAAAASUVORK5CYII=">
+</html>

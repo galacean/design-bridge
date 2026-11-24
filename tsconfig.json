@@ -1,0 +1,11 @@
+{
+  "references": [
+    {
+      "path": "./packages/figma2ge"
+    },
+    {
+      "path": "./packages/lottie2ir"
+    }
+  ],
+  "files": []
+}

@@ -1,0 +1,144 @@
+{
+  "siteName": "Design Bridge",
+  "homeHref": "/",
+  "sourceLocale": "en",
+  "locales": ["zh-CN", "en"],
+  "pages": [{ "slug": null }],
+  "api": {
+    "dataDirectory": "site/data/api",
+    "repository": "https://github.com/galacean/design-bridge.git",
+    "versions": ["1.0.0"],
+    "generation": { "scope": "latest" },
+    "sourceLinkTemplate": "https://github.com/galacean/design-bridge/blob/{commit}/{path}#L{line}",
+    "typedocOptions": {
+      "excludeNotDocumented": false,
+      "excludeReferences": false,
+      "excludeExternals": true
+    },
+    "packages": [
+      {
+        "key": "animation-ir",
+        "name": "@galacean/animation-ir",
+        "directory": "packages/animation-ir",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" },
+          { "key": "validator", "source": "src/validator/index.ts", "types": "dist/validator/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      },
+      {
+        "key": "dsl-ir",
+        "name": "@galacean/dsl-ir",
+        "directory": "packages/dsl-ir",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      },
+      {
+        "key": "ge-ir",
+        "name": "@galacean/ge-ir",
+        "directory": "packages/ge-ir",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      },
+      {
+        "key": "html2figma",
+        "name": "@galacean/html2figma",
+        "directory": "packages/html2figma",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      },
+      {
+        "key": "lottie2ir",
+        "name": "@galacean/lottie2ir",
+        "directory": "packages/lottie2ir",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      },
+      {
+        "key": "shader2ge",
+        "name": "@galacean/shader2ge",
+        "directory": "packages/shader2ge",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      },
+      {
+        "key": "svg2ir",
+        "name": "@galacean/svg2ir",
+        "directory": "packages/svg2ir",
+        "tsconfig": "tsconfig.json",
+        "entries": [
+          { "key": "root", "source": "src/index.ts", "types": "dist/index.d.ts" }
+        ],
+        "readme": {
+          "files": {
+            "en": "README.md",
+            "zh-CN": "README-zh_CN.md"
+          }
+        }
+      }
+    ]
+  },
+  "manual": {
+    "dataDirectory": "site/data/manual",
+    "collections": [
+      {
+        "key": "local-guides",
+        "source": {
+          "type": "local",
+          "directory": "site/manual-source",
+          "locale": "zh-CN"
+        }
+      }
+    ]
+  },
+  "translationDirectory": "tmp/docs-tools",
+  "dataBaseUrls": {
+    "production": "https://mdn.alipayobjects.com/rms/uri/file/as/c0287275/"
+  }
+}

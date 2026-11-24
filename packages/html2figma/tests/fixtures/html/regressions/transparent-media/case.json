@@ -1,0 +1,10 @@
+{
+  "id": "transparent-media",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 480, "height": 180 },
+  "targets": [
+    { "id": "contain", "selector": "#contain", "sceneName": "contain", "requiresImage": true },
+    { "id": "alpha", "selector": "#alpha", "sceneName": "alpha", "requiresImage": true },
+    { "id": "background", "selector": "#background", "sceneName": "background" }
+  ]
+}

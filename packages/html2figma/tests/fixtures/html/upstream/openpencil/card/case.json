@@ -1,0 +1,15 @@
+{
+  "id": "openpencil-card",
+  "scriptPolicy": "disabled",
+  "viewport": {
+    "width": 800,
+    "height": 600
+  },
+  "targets": [
+    {
+      "id": "card",
+      "selector": ".card",
+      "sceneName": "Article"
+    }
+  ]
+}

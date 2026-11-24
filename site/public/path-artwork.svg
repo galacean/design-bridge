@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .node { fill: none; stroke: currentColor; stroke-width: 1.25; opacity: .48; }
+    .line { fill: none; stroke: currentColor; stroke-width: 1.25; opacity: .48; }
+    .accent-line { fill: none; stroke: currentColor; stroke-width: 1.5; }
+    .core { fill: currentColor; fill-opacity: .08; stroke: currentColor; stroke-width: 1.5; }
+    .dot { fill: currentColor; }
+    .label, .core-label { fill: currentColor; font: 10px 'IBM Plex Mono', monospace; }
+    .label { opacity: .72; }
+    .core-label { font-weight: 600; }
+  </style>
+  <symbol id="import" viewBox="0 0 220 160">
+    <rect class="node" x="16" y="12" width="78" height="30" rx="3" />
+    <path class="line" d="M25 21h10m-10 6h6" />
+    <text class="label" x="57" y="31" text-anchor="middle">Lottie</text>
+    <rect class="node" x="126" y="12" width="78" height="30" rx="3" />
+    <path class="line" d="M136 20h10v13h-10z" />
+    <text class="label" x="166" y="31" text-anchor="middle">SVG</text>
+    <path class="accent-line" d="M55 42v20h55m55-20v20h-55m0 0v19m-4-5 4 5 4-5" />
+    <rect class="core" x="53" y="87" width="114" height="48" rx="3" />
+    <path class="accent-line" d="M67 99h12m-12 7h12m-12 7h7" />
+    <text class="core-label" x="119" y="105" text-anchor="middle">ANIMATION</text>
+    <text class="core-label" x="119" y="121" text-anchor="middle">IR</text>
+  </symbol>
+  <symbol id="edit" viewBox="0 0 220 160">
+    <rect class="node" x="76" y="7" width="68" height="28" rx="3" />
+    <text class="label" x="110" y="25" text-anchor="middle">GE</text>
+    <path class="accent-line" d="M101 40v13m-4-5 4 5 4-5m10-8v-8m-4 4 4-4 4 4" />
+    <rect class="core" x="64" y="59" width="92" height="40" rx="3" />
+    <path class="accent-line" d="M78 70h12m-12 7h42m-42 7h29" />
+    <text class="core-label" x="136" y="84" text-anchor="middle">IR</text>
+    <path class="accent-line" d="M101 104v8m-4-5 4 5 4-5m10 5v-13m-4 5 4-5 4 5" />
+    <rect class="node" x="76" y="119" width="68" height="28" rx="3" />
+    <text class="label" x="110" y="137" text-anchor="middle">DSL</text>
+  </symbol>
+  <symbol id="design" viewBox="0 0 220 160">
+    <rect class="node" x="48" y="7" width="124" height="34" rx="3" />
+    <path class="line" d="M48 17h124m-111-5h1m6 0h1m6 0h1" />
+    <path class="accent-line" d="M65 25h22m-22 7h33" />
+    <text class="label" x="133" y="32" text-anchor="middle">HTML / CSS</text>
+    <path class="accent-line" d="M110 42v13m-4-5 4 5 4-5" />
+    <rect class="core" x="60" y="61" width="100" height="42" rx="3" />
+    <path class="accent-line" d="M71 71h11v19H71zm18 0h59m-59 7h59m-59 7h35" />
+    <text class="core-label" x="115" y="98" text-anchor="middle">FIGMA</text>
+    <path class="accent-line" d="M110 104v11m-4-5 4 5 4-5" />
+    <path class="core" d="m110 121 28 15-28 15-28-15z" />
+    <path class="accent-line" d="m82 136 28 15 28-15" />
+    <text class="core-label" x="110" y="140" text-anchor="middle">GE</text>
+  </symbol>
+  <symbol id="shader" viewBox="0 0 220 160">
+    <rect class="node" x="56" y="8" width="108" height="50" rx="3" />
+    <path class="line" d="M56 19h108" />
+    <circle class="dot" cx="65" cy="13.5" r="1.5" />
+    <circle class="dot" cx="72" cy="13.5" r="1.5" />
+    <text class="core-label" x="79" y="42" font-size="19">&lt;&gt;</text>
+    <path class="line" d="M108 32h43m-43 7h33" />
+    <text class="label" x="110" y="53" text-anchor="middle">GLSL</text>
+    <path class="accent-line" d="M110 59v20m-4-5 4 5 4-5" />
+    <path class="core" d="m110 89 34 18v35l-34 18-34-18v-35z" />
+    <path class="accent-line" d="m76 107 34 18 34-18m-34 18v35" />
+    <text class="core-label" x="110" y="130" text-anchor="middle">GE</text>
+  </symbol>
+</svg>

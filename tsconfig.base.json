@@ -1,0 +1,80 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "noImplicitOverride": true,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "stripInternal": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2015",
+      "ESNext"
+    ],
+    "paths": {
+      "@galacean/animation-ir": [
+        "./packages/animation-ir/src"
+      ],
+      "@galacean/animation-ir/adapter": [
+        "./packages/animation-ir/src/adapter"
+      ],
+      "@galacean/animation-ir/validator": [
+        "./packages/animation-ir/src/validator"
+      ],
+      "@galacean/ge-ir": [
+        "./packages/ge-ir/src"
+      ],
+      "@galacean/html2figma": [
+        "./packages/html2figma/src"
+      ],
+      "@galacean/html2figma/browser": [
+        "./packages/html2figma/src/browser.ts"
+      ],
+      "@galacean/html2figma/browser/clipboard": [
+        "./packages/html2figma/src/browser-clipboard-entry.ts"
+      ],
+      "@galacean/html2figma/browser/file": [
+        "./packages/html2figma/src/browser-file-entry.ts"
+      ],
+      "@galacean/html2figma/browser/zip": [
+        "./packages/html2figma/src/browser-zip-entry.ts"
+      ],
+      "@galacean/figma2ge": [
+        "./packages/figma2ge/src"
+      ],
+      "@galacean/lottie2ir": [
+        "./packages/lottie2ir/src"
+      ],
+      "@galacean/dsl-ir": [
+        "./packages/dsl-ir/src"
+      ],
+      "@galacean/svg2ir": [
+        "./packages/svg2ir/src"
+      ],
+      "@svg2ir/internal-debug": [
+        "./packages/svg2ir/src/debug"
+      ],
+      "@galacean/shader2ge": [
+        "./packages/shader2ge/src"
+      ],
+      "@galacean/svg2ir/helper": [
+        "./packages/svg2ir/src/helper"
+      ]
+    }
+  }
+}

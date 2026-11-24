@@ -1,0 +1,8 @@
+{
+  "id": "implicit-icon-styles",
+  "scriptPolicy": "disabled",
+  "viewport": { "width": 320, "height": 200 },
+  "targets": [{
+    "id": "tile", "selector": "#tile", "sceneName": "tile"
+  }]
+}
