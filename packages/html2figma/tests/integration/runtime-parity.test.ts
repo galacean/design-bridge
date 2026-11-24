@@ -191,7 +191,7 @@ describe('Browser and Node runtime parity', () => {
 
   it('produces the same normalized Scene IR in the same Chromium version', async () => {
     const nodeScene = await extractScene(HTML, true, { viewport: { width: 390, height: 844 } });
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: true, channel: 'chromium' });
 
     try {
       const page = await browser.newPage({ viewport: { width: 390, height: 844 } });

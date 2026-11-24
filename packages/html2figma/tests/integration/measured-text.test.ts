@@ -36,7 +36,8 @@ describe('browser measured text placement', () => {
 
   it('measures leaf italic and bold italic text with the browser-selected font style', async () => {
     const fixture = await loadHTMLFixture('regressions/italic-text');
-    const browser = await chromium.launch();
+    // Match the extractor: headless shell can produce different font metrics on Linux.
+    const browser = await chromium.launch({ channel: 'chromium' });
 
     try {
       const page = await browser.newPage({ viewport: fixture.viewport });
@@ -96,7 +97,7 @@ describe('browser measured text placement', () => {
 
   it('keeps native line boundaries and baselines in the exported FIG', async () => {
     const fixture = await loadHTMLFixture('regressions/measured-text');
-    const browser = await chromium.launch();
+    const browser = await chromium.launch({ channel: 'chromium' });
 
     try {
       const page = await browser.newPage({ viewport: fixture.viewport });
