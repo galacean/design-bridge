@@ -40,11 +40,11 @@ pnpm dev:site
 
 `docs.config.json` 声明文档来源、支持语言、页面元数据及生产数据前缀。`site.config.ts` 导出类型明确、可直接消费的 `DocsSiteOptions`，集中选择开发/生产数据 URL、解析品牌 URL、合并文案和组装 API 配置。`src/app.tsx` 仅绑定页面声明与 React renderer，并挂载 `<DocsSite config={siteConfig} pages={pages} />`。
 
-`docs.config.json` 中的 `homeHref` 配置为 `/`，运行时与静态 404 页共用此配置，统一所有首页和品牌链接；路由路径会添加站点 base 前缀。
+`docs.config.json` 中的 `homeHref` 配置为 `/`，运行时使用此配置统一首页和品牌链接，包括应用内的未找到页面；路由路径会添加站点 base 前缀。
 
 `docs.config.json` 只声明 `dataBaseUrls.production`，开发使用本地数据。两个环境地址都可省略；省略生产地址时读取站点 base 下的数据，部署时需将 `data/` 包含在产物中或由宿主在对应路径提供。配置模块直接选择环境地址，缺省时使用应用 base。
 
-CLI 检查静态路由声明，应用按声明绑定 renderer。每个页面必须有 renderer，`home` 对应 null-slug 首页。文档源语言 `sourceLocale` 为 `en`，访问兜底语言 `defaultLocale` 为 `zh-CN`，两者独立。路由 base 与数据发布前缀也各自独立，后者是 `data/` 之前的前缀。
+应用按页面声明绑定 renderer。每个页面必须有 renderer，`home` 对应 null-slug 首页。文档源语言 `sourceLocale` 为 `en`，访问兜底语言 `defaultLocale` 为 `zh-CN`，两者独立。路由 base 与数据发布前缀也各自独立，后者是 `data/` 之前的前缀。
 
 ## 站点数据
 
@@ -68,18 +68,21 @@ CLI 检查静态路由声明，应用按声明绑定 renderer。每个页面必�
    make api-docs
    ```
 
-2. 每次部署都生成站点数据并构建：
+2. 生成站点数据：
 
    ```bash
    make site-data
-   SITE_BASE_PATH=/design-bridge/ make build-site
    ```
 
-3. 分别发布 `site/data/` 到 CDN、`site/dist/` 到站点托管环境。
+3. 单独发布 `site/data/` 到 CDN。部署工作流构建单页站点，不需要本地 `site/data/` 或路由清单。
+   普通 CI 只执行代码检查与测试，不构建站点。
 
-`make build-site` 构建转换包、前端和静态路由，不生成或下载站点数据。
-生成静态路由前，本地必须已有完整的 `site/data/`。
-`SITE_BASE_PATH` 必须以 `/` 开始和结束；需要生成 canonical 链接时，
+需要在本地构建可部署站点时，运行 `SITE_BASE_PATH=/design-bridge/ make build-site`。
+此命令将仓库中的 `site/index.html` 和 `site/404.html` 作为 Vite HTML 入口构建；部署产物为 `site/dist/`。
+两个入口加载同一应用，由 Vite 处理资源引用。
+`DocsSite` 使用浏览器路由，GitHub Pages 在直达或刷新子路径时通过自定义 404 页面加载应用。
+这些路径首次响应的 HTTP 状态仍为 404。
+`SITE_BASE_PATH` 必须以 `/` 开始和结束；运行时需要显式站点 origin 时，
 可在构建命令前设置 `VITE_SITE_ORIGIN`，例如：
 
 ```bash

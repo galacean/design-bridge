@@ -33,14 +33,9 @@ site-data:
 	$(MAKE) package-readmes
 	$(MAKE) search-index
 
-# 根据 DOCS_CONFIG 指定的配置校验静态页面所需路由并输出路由清单。
-static-routes:
-	pnpm exec galacean-docs routes build --config "$(DOCS_CONFIG)"
-
-# 完整构建文档站：先构建 workspace 包，再生成前端资源和静态路由。
+# 构建单页站点，使用 GitHub Pages 的 404 页面加载前端路由。
 build-site:
 	pnpm --filter site build
-	$(MAKE) static-routes
 
 # 更新仓库中各 package 的版本号。
 version:
