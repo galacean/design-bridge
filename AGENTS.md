@@ -53,7 +53,7 @@ make build-site
 - `pnpm test` 递归执行所有子 workspace 的 `test` 脚本，包含转换包、工作台和站点。
 - `pnpm build` 构建所有包；仅在需要验证发布产物时运行。
 - `make site-data` 经共享 docs-tools 同步手册并生成 package README JSON 和搜索索引；API 快照须另行准备，生成的数据发布到 CDN。
-- `make build-site` 通过 Vite 构建 `site/index.html` 和 `site/404.html`，由前端处理路由，不需要本地 `site/data/`。
+- `make build-site` 构建所有转换包、静态站点和路由，不生成站点数据；静态路由仍需要本地 `site/data/`。
 - 环境、清理和维护命令见 `docs/developing.md`。
 - 优先运行最小相关验证，例如：
 

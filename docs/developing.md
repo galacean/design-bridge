@@ -79,7 +79,7 @@ generated output to be checked. Record checks actually run and their results; do
 | `pnpm build` | Build all conversion packages under `packages/` |
 | `make manual-sync` | Optional: refresh only manuals under `site/data/manual/` from `site/manual-source/` |
 | `make site-data` | Sync manuals and generate package README data and search indexes under `site/data/` |
-| `make build-site` | Build the single-page site with a GitHub Pages 404 entry in `site/dist/` |
+| `make build-site` | Build all conversion packages, then the static site in `site/dist/` |
 
 The workbench is a local development tool and has no production build command. Use `pnpm dev` to run it and
 `pnpm --filter web-packages test` to validate its workflows.
@@ -87,14 +87,11 @@ The workbench is a local development tool and has no production build command. U
 `pnpm dev:site` reads data from local `site/data/` through Vite's `/data/` route; no CDN upload is needed for local
 preview. A fresh checkout must first provide API snapshots from the CDN or generate them with `make api-docs`.
 
-Run `make site-data` to sync manuals and generate package README data and search indexes; API snapshots must already
-be present in `site/data/`. Upload the prepared document data to the CDN separately.
-
-The deployment workflow runs `make build-site`: Vite builds `site/index.html` and `site/404.html` as HTML entries
-that load the same single-page app, with compiled asset references.
-`DocsSite` handles routes in the browser. GitHub Pages serves the app's 404 entry for direct
-links and refreshes of nested paths; those initial responses still have HTTP 404 status. Builds need no local document
-data or route list. Ordinary CI only runs code checks and tests.
+Production site builds use package build outputs rather than development source aliases.
+The site build checks types, bundles with Vite, and generates static route entries. Run `make site-data` to sync manuals
+and generate package README data and search indexes; API snapshots must already be present in `site/data/` for data
+generation and static routes. Upload the prepared data to the CDN separately.
+Site builds do not extract APIs, import translations, or download history.
 
 ## API Documentation
 
