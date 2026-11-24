@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@galacean/effects-specification": "catalog:",
-    "@svgdotjs/svg.js": "3.2.7",
+    "@svgdotjs/svg.js": "3.2.8",
     "@galacean/animation-ir": "workspace:*",
     "@galacean/ge-ir": "workspace:*",
     "svgdom": "0.1.14"
