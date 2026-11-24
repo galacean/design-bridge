@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { normalizeBase } from '@galacean/docs-site';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
@@ -13,6 +14,12 @@ export default defineConfig(() => ({
   },
   build: {
     outDir: 'dist', emptyOutDir: true, assetsInlineLimit: 0,
+    rolldownOptions: {
+      input: {
+        index: fileURLToPath(new URL('./index.html', import.meta.url)),
+        notFound: fileURLToPath(new URL('./404.html', import.meta.url)),
+      },
+    },
     target: ['chrome110', 'edge110', 'firefox110', 'safari16.4'],
   },
 }));
