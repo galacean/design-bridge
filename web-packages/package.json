@@ -23,7 +23,7 @@
     "@galacean/lottie2ir": "workspace:*",
     "@galacean/shader2ge": "workspace:*",
     "@galacean/svg2ir": "workspace:*",
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.6.1",
     "lottie-web": "^5.12.2",
     "multer": "^2.0.2",
     "react": "catalog:",
