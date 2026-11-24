@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   checks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -20,9 +20,6 @@ jobs:
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @galacean/html2figma exec playwright install --with-deps chromium
-      - run: make build-site
-        env:
-          SITE_BASE_PATH: /design-bridge/
       - run: pnpm lint
       - run: pnpm check:ts
       - run: pnpm test

@@ -16,11 +16,8 @@ Design Bridge 的双语文档与 API 参考站点。
    pnpm install
    ```
 
-2. 确认 `site/data/api/` 中有 API manifest 和快照。
-   如果缺少文件，运行 `make api-docs` 生成当前源码对应的数据。
-   如果要保留已发布的历史版本或译文，请先准备现有 API 数据。
-   不要用当前源码重新生成的数据替代。
-3. 生成本地预览所需的手册、包 README 数据和搜索索引：
+2. 如果要保留已发布的历史版本或译文，先恢复现有 API 数据和翻译归档。
+3. 生成本地预览所需的手册、API 文档、包 README 数据和搜索索引：
 
    ```bash
    make site-data
@@ -32,9 +29,9 @@ Design Bridge 的双语文档与 API 参考站点。
 pnpm dev:site
 ```
 
-站点运行在 `http://localhost:8081`。当手册源文件、包 README 或 API 数据发生变化时，先运行
-`make site-data` 刷新生成数据，再启动或刷新预览。`make site-data` 不会生成 API 快照；API
-源码或文档注释变化时，先运行 `make api-docs`。
+站点运行在 `http://localhost:8081`。当手册源文件或包 README 发生变化时，先运行
+`make site-data` 刷新生成数据，再启动或刷新预览。应用 API 译文后，可单独运行
+`make search-index` 刷新搜索索引；API 源码或注释变化时的更新方式见下方“API 文档翻译”。
 
 ## 配置流转
 
@@ -48,37 +45,29 @@ CLI 检查静态路由声明，应用按声明绑定 renderer。每个页面必�
 
 ## 站点数据
 
-- `data/api/`：API manifest 与多语言 TypeDoc 快照。
+- `data/api/`：由 `make site-data` 中的 `api-docs` 步骤准备的 API manifest 与多语言 TypeDoc 快照。
 - `manual-source/`：受版本管理的导航和双语 Markdown 源文件。
 - `data/manual/`：由 `make site-data` 生成的手册。
 - `data/package-readmes/` 和 `data/search/`：由 `make site-data` 生成的 README 数据与搜索索引。
 
-`make site-data` 依次同步手册、生成 README 数据和搜索索引。只需单独刷新手册时可运行
-`make manual-sync`。
+`make site-data` 依次执行 `manual-sync`、`api-docs`、`package-readmes` 和 `search-index`，
+同步手册、生成 API 文档与 README 数据，最后构建搜索索引。各目标也可单独执行。
+API 生成会复用完整的已配置版本，并为缺失版本生成快照。
 
 ## 每次部署
 
 以下命令均从仓库根目录执行。
 
-1. 只有 API 源码或文档注释变化时，才运行以下命令更新 API 快照；否则跳过此步。
-   若要保留已有历史版本或译文，请先准备 `site/data/api/` 中的现有数据。
-   不要用当前源码生成的数据替代它们。
+1. 若要保留已有历史版本或译文，先恢复现有 API 数据和翻译归档。
+2. 生成站点数据并构建：
 
    ```bash
-   make api-docs
-   ```
-
-2. 每次部署都生成站点数据并构建：
-
-   ```bash
-   make site-data
    SITE_BASE_PATH=/design-bridge/ make build-site
    ```
 
 3. 分别发布 `site/data/` 到 CDN、`site/dist/` 到站点托管环境。
 
-`make build-site` 构建转换包、前端和静态路由，不生成或下载站点数据。
-生成静态路由前，本地必须已有完整的 `site/data/`。
+`make build-site` 先执行 `site-data`，再通过 Vite 构建前端并生成静态路由。
 `SITE_BASE_PATH` 必须以 `/` 开始和结束；需要生成 canonical 链接时，
 可在构建命令前设置 `VITE_SITE_ORIGIN`，例如：
 
@@ -89,8 +78,14 @@ SITE_BASE_PATH=/design-bridge/ make build-site
 
 ## API 文档翻译
 
-`make api-docs` 从源码生成 TypeDoc API 快照，不负责翻译。翻译现有快照时使用
-`api-documentation-translation` skill：
+`make api-docs` 为 `docs.config.json` 中配置的最新版本执行 API 生成，已有完整快照会被复用。
+API 源码或注释变化后，若需重建已有版本，运行：
+
+```bash
+pnpm exec galacean-docs api generate --config site/docs.config.json --force
+```
+
+API 生成不负责翻译。翻译现有快照时使用 `api-documentation-translation` skill：
 
 1. 从 `site/data/api/manifest.json` 选择包、版本和目标语言对应的快照文件。
 2. 运行以下命令提取翻译任务：
@@ -101,15 +96,15 @@ SITE_BASE_PATH=/design-bridge/ make build-site
 
 3. 按 skill 指引翻译任务中的注释字段，保留字段 key、代码 token 和其他 JSON 数据，
    并生成对应的 translation JSON。
-4. 运行以下命令应用翻译结果，再运行 `make site-data` 刷新搜索索引：
+4. 运行以下命令应用翻译结果，再运行 `make search-index` 刷新搜索索引：
 
    ```bash
    pnpm exec galacean-docs api apply --config site/docs.config.json <task-path> <translation-path>
    ```
 
 `api extract` 使用 manifest 指向的包/版本/语言 wrapper 文件，不要编辑快照或
-`api/snapshots/` 中的内容寻址文件。API 源码或注释变化时先运行 `make api-docs`；只更新译文时
-不必重生成快照。翻译任务默认写入被忽略的 `tmp/docs-tools/api-translation/`。
+`api/snapshots/` 中的内容寻址文件。只更新译文时不必重生成快照。
+翻译任务默认写入被忽略的 `tmp/docs-tools/api-translation/`。
 
 ## 许可证
 

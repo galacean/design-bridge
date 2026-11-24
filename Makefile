@@ -28,8 +28,10 @@ package-readmes:
 search-index:
 	pnpm exec galacean-docs search build --config "$(DOCS_CONFIG)"
 
-# 生成站点所需的 README 数据和搜索索引。
+# 依次同步手册、生成 API 文档与 package README 数据，最后构建搜索索引。
 site-data:
+	$(MAKE) manual-sync
+	$(MAKE) api-docs
 	$(MAKE) package-readmes
 	$(MAKE) search-index
 
@@ -37,8 +39,9 @@ site-data:
 static-routes:
 	pnpm exec galacean-docs routes build --config "$(DOCS_CONFIG)"
 
-# 完整构建文档站：先构建 workspace 包，再生成前端资源和静态路由。
+# 先生成站点数据，再构建前端资源和静态路由。
 build-site:
+	$(MAKE) site-data
 	pnpm --filter site build
 	$(MAKE) static-routes
 

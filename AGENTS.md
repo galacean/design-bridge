@@ -52,8 +52,8 @@ make build-site
 - `pnpm check:ts` 使用根 `tsconfig.check.json` 检查包、前端和测试，不逐包执行独立配置。
 - `pnpm test` 递归执行所有子 workspace 的 `test` 脚本，包含转换包、工作台和站点。
 - `pnpm build` 构建所有包；仅在需要验证发布产物时运行。
-- `make site-data` 经共享 docs-tools 同步手册并生成 package README JSON 和搜索索引；API 快照须另行准备，生成的数据发布到 CDN。
-- `make build-site` 构建所有转换包、静态站点和路由，不生成站点数据；静态路由仍需要本地 `site/data/`。
+- `make site-data` 经共享 docs-tools 依次同步手册、生成 API 文档与 package README JSON、构建搜索索引，数据写入 `site/data/`。
+- `make build-site` 先执行 `site-data`，再构建静态站点和路由；分别发布 `site/data/` 到 CDN、`site/dist/` 到站点托管环境。
 - 环境、清理和维护命令见 `docs/developing.md`。
 - 优先运行最小相关验证，例如：
 

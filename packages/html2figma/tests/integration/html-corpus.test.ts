@@ -68,7 +68,7 @@ describe.each(fixtures)('HTML corpus: $id', fixture => {
   let nodes: Array<Record<string, unknown>>;
 
   beforeAll(async () => {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: true, channel: 'chromium' });
 
     try {
       const [captured, document] = await Promise.all([
