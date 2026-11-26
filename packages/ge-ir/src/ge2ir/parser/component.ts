@@ -1,5 +1,5 @@
 import type {
-  IRBlendMode, IRColor, IRBezierPath,
+  IRBlendMode, IRColor, IRBezierPath, IRStaticProperty,
   IRFontAsset, IRLocalBounds, IRParticleContent, IRShape, IRShapePaint, IRShapeStyle, IRTextContent,
 } from '@galacean/animation-ir';
 import { IRPaintType, IRLineCap, IRLineJoin, IRShapePrimitiveType, IRTextureScaleMode } from '@galacean/animation-ir';
@@ -404,7 +404,7 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
   const GEType = component['type'] as ShapePrimitiveType | undefined;
   const primitiveType = mapShapePrimitiveTypeToIR(GEType ?? ShapePrimitiveType.Custom);
   const style: IRShapeStyle = {
-    position: [0, 0],
+    position: { type: 'static', value: [0, 0] },
     fills: [],
     strokes: [],
   };
@@ -444,7 +444,7 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
         sourceComponentId,
       );
 
-      return paint == null ? [] : [{ paint, width: strokeWidth, cap: strokeCap, join: strokeJoin }];
+      return paint == null ? [] : [{ paint, width: { type: 'static', value: strokeWidth }, cap: strokeCap, join: strokeJoin }];
     });
   }
 
@@ -454,7 +454,7 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
       const firstPath = customPaths[0];
 
       return firstPath != null
-        ? { ...style, primitiveType, customPaths: [firstPath, ...customPaths.slice(1)] }
+        ? { ...style, primitiveType, customPaths: { type: 'static', value: customPaths } }
         : undefined;
     }
     case IRShapePrimitiveType.Rectangle: {
@@ -465,8 +465,8 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
         ? {
             ...style,
             primitiveType,
-            width,
-            height,
+            width: { type: 'static', value: width },
+            height: { type: 'static', value: height },
             ...readRectangleCornerRadius(component, width, height),
           }
         : undefined;
@@ -475,7 +475,10 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
       const xRadius = readScaledNumber(component, 'xRadius', ctx.ratio);
       const yRadius = readScaledNumber(component, 'yRadius', ctx.ratio);
 
-      return xRadius != null && yRadius != null ? { ...style, primitiveType, xRadius, yRadius } : undefined;
+      return xRadius != null && yRadius != null ? {
+        ...style, primitiveType,
+        xRadius: { type: 'static', value: xRadius }, yRadius: { type: 'static', value: yRadius },
+      } : undefined;
     }
     case IRShapePrimitiveType.Polygon: {
       const pointCount = readPointCount(component);
@@ -486,7 +489,7 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
             ...style,
             primitiveType,
             pointCount,
-            radius,
+            radius: { type: 'static', value: radius },
             ...readOptionalNumberField(component, 'roundness'),
           }
         : undefined;
@@ -501,8 +504,8 @@ function parseShapeOptions(component: Record<string, unknown>, ctx: GESceneConte
             ...style,
             primitiveType,
             pointCount,
-            innerRadius,
-            outerRadius,
+            innerRadius: { type: 'static', value: innerRadius },
+            outerRadius: { type: 'static', value: outerRadius },
             ...readOptionalNumberField(component, 'innerRoundness'),
             ...readOptionalNumberField(component, 'outerRoundness'),
           }
@@ -538,7 +541,7 @@ function parseShapePaint(
       return undefined;
     }
 
-    return { type: IRPaintType.Solid, color: [color.r, color.g, color.b, color.a] };
+    return { type: IRPaintType.Solid, color: { type: 'static', value: [color.r, color.g, color.b, color.a] } };
   }
 
   if (GEType === FillType.GradientLinear || GEType === FillType.GradientRadial || GEType === FillType.GradientAngular) {
@@ -573,9 +576,9 @@ function parseShapePaint(
 
     return {
       type: typeMap[GEType] as 'linear-gradient' | 'radial-gradient' | 'angular-gradient',
-      gradientStops: stops,
-      gradientStart: [startPoint.x / ctx.ratio, -startPoint.y / ctx.ratio],
-      gradientEnd: [endPoint.x / ctx.ratio, -endPoint.y / ctx.ratio],
+      gradientStops: { type: 'static', value: stops },
+      gradientStart: { type: 'static', value: [startPoint.x / ctx.ratio, -startPoint.y / ctx.ratio] },
+      gradientEnd: { type: 'static', value: [endPoint.x / ctx.ratio, -endPoint.y / ctx.ratio] },
     };
   }
 
@@ -591,6 +594,7 @@ function parseShapePaint(
     return {
       type: IRPaintType.Texture,
       assetId,
+      ...readOptionalNumberField(paint, 'opacity'),
       ...(scaleMode != null && { scaleMode }),
     };
   }
@@ -682,17 +686,18 @@ function readScaledNumber(component: Record<string, unknown>, key: string, ratio
 function readOptionalNumberField<K extends string>(
   component: Record<string, unknown>,
   key: K,
-): Partial<Record<K, number>> {
+): Partial<Record<K, IRStaticProperty<number>>> {
   const value = component[key];
 
-  return typeof value === 'number' && Number.isFinite(value) ? ({ [key]: value } as Record<K, number>) : {};
+  return typeof value === 'number' && Number.isFinite(value)
+    ? ({ [key]: { type: 'static', value } } as Record<K, IRStaticProperty<number>>) : {};
 }
 
 function readRectangleCornerRadius(
   component: Record<string, unknown>,
   width: number,
   height: number,
-): { cornerRadius?: number } {
+): { cornerRadius?: IRStaticProperty<number> } {
   const roundness = component['roundness'];
 
   if (typeof roundness !== 'number' || !Number.isFinite(roundness)) {
@@ -700,7 +705,7 @@ function readRectangleCornerRadius(
   }
   const percentage = Math.min(Math.max(roundness, 0), 100) / 100;
 
-  return { cornerRadius: percentage * Math.min(width, height) / 2 };
+  return { cornerRadius: { type: 'static', value: percentage * Math.min(width, height) / 2 } };
 }
 
 function readPointCount(component: Record<string, unknown>): number | undefined {

@@ -1,4 +1,12 @@
-import type { IRShape } from '@galacean/animation-ir';
+import type { IRAnimatedProperty, IRPropertyValue, IRShape } from '@galacean/animation-ir';
+
+export function expectStaticValue<T extends IRPropertyValue>(property: IRAnimatedProperty<T> | undefined): T {
+  if (property?.type !== 'static') {
+    throw new Error('Expected a static IR property');
+  }
+
+  return property.value;
+}
 
 export function expectShapePrimitive<T extends IRShape['primitiveType']>(
   shape: IRShape | undefined,

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   IREndBehavior, IRPaintType, IRMaskMode, IRMatteMode, IRShapePrimitiveType, IRTextureScaleMode,
-  type IRComposition, type IRLayer, type IRMask, type IRTransform,
+  type IRComposition, type IRLayer, type IRMask, type IRShape, type IRTransform,
 } from '@galacean/animation-ir';
 import { createIRScene } from '@galacean/animation-ir/adapter';
 import {
@@ -372,19 +372,19 @@ describe('convertIRToGE', () => {
         shapes: [
           {
             primitiveType: IRShapePrimitiveType.Rectangle,
-            width: 130,
-            height: 90,
-            fills: [{ type: IRPaintType.Solid, color: [0, 0, 1, 1] }],
+            width: { type: 'static', value: 130 },
+            height: { type: 'static', value: 90 },
+            fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [0, 0, 1, 1] } }],
             strokes: [],
-            position: [85, 100],
+            position: { type: 'static', value: [85, 100] },
           },
           {
             primitiveType: IRShapePrimitiveType.Ellipse,
-            xRadius: 55,
-            yRadius: 55,
-            fills: [{ type: IRPaintType.Solid, color: [1, 0, 0, 1] }],
+            xRadius: { type: 'static', value: 55 },
+            yRadius: { type: 'static', value: 55 },
+            fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } }],
             strokes: [],
-            position: [115, 100],
+            position: { type: 'static', value: [115, 100] },
           },
         ],
       },
@@ -1815,8 +1815,8 @@ describe('convertIRToGE', () => {
           shapes: [
             {
               primitiveType: IRShapePrimitiveType.Rectangle,
-              width: 100,
-              height: 100,
+              width: { type: 'static', value: 100 },
+              height: { type: 'static', value: 100 },
               fills: [
                 {
                   type: IRPaintType.Texture,
@@ -1825,7 +1825,7 @@ describe('convertIRToGE', () => {
                 },
               ],
               strokes: [],
-              position: [0, 0],
+              position: { type: 'static', value: [0, 0] },
             },
           ],
         },
@@ -1861,21 +1861,21 @@ describe('convertIRToGE', () => {
           shapes: [
             {
               primitiveType: IRShapePrimitiveType.Rectangle,
-              width: 100,
-              height: 60,
+              width: { type: 'static', value: 100 },
+              height: { type: 'static', value: 60 },
               fills: [
                 {
                   type: IRPaintType.LinearGradient,
-                  gradientStops: [
+                  gradientStops: { type: 'static', value: [
                     [0, 1, 0, 0, 1],
                     [1, 0, 0, 1, 1],
-                  ],
-                  gradientStart: [0, 0],
-                  gradientEnd: [100, 0],
+                  ] },
+                  gradientStart: { type: 'static', value: [0, 0] },
+                  gradientEnd: { type: 'static', value: [100, 0] },
                 },
               ],
               strokes: [],
-              position: [0, 0],
+              position: { type: 'static', value: [0, 0] },
             },
           ],
         },
@@ -1905,12 +1905,12 @@ describe('convertIRToGE', () => {
       content: {
         shapes: [{
           primitiveType: IRShapePrimitiveType.Rectangle,
-          width: 100,
-          height: 60,
-          cornerRadius: 15,
-          fills: [{ type: IRPaintType.Solid, color: [1, 0, 0, 1] }],
+          width: { type: 'static', value: 100 },
+          height: { type: 'static', value: 60 },
+          cornerRadius: { type: 'static', value: 15 },
+          fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } }],
           strokes: [],
-          position: [0, 0],
+          position: { type: 'static', value: [0, 0] },
         }],
       },
     })]);
@@ -1922,6 +1922,52 @@ describe('convertIRToGE', () => {
     expect(component?.['roundness']).toBe(50);
   });
 
+  it('multiplies static paint opacity into solid and gradient alpha without mutating IR', () => {
+    const shape: IRShape = {
+      primitiveType: 'rectangle', width: { type: 'static', value: 100 }, height: { type: 'static', value: 60 },
+      position: { type: 'static', value: [0, 0] }, strokes: [],
+      fills: [
+        { type: 'solid', color: { type: 'static', value: [1, 0, 0, 0.8] }, opacity: { type: 'static', value: 0.5 } },
+        {
+          type: 'linear-gradient', gradientStops: { type: 'static', value: [[0, 1, 0, 0, 0.6], [1, 0, 0, 1, 1]] },
+          gradientStart: { type: 'static', value: [0, 0] }, gradientEnd: { type: 'static', value: [100, 0] },
+          opacity: { type: 'static', value: 0.5 },
+        },
+      ],
+    };
+    const ir = createMinimalIR([createMinimalLayer({
+      orderIndex: 0, name: 'paint-opacity', type: 'shape', content: { shapes: [shape] },
+    })]);
+    const before = structuredClone(ir);
+    const scene = convertIRToGE(ir);
+    const component = scene.components?.find(item => item.dataType === DataType.ShapeComponent);
+
+    expect(component).toMatchObject({ fills: [
+      { color: { r: 1, g: 0, b: 0, a: 0.4 } },
+      { gradientStops: [ValueType.GRADIENT_COLOR, [[0, 1, 0, 0, 0.3], [1, 0, 0, 1, 0.5]]] },
+    ] });
+    expect(ir).toEqual(before);
+  });
+
+  it.each(['geometry', 'paint'] as const)('rejects unsupported shape %s animation explicitly', channel => {
+    const shape: IRShape = {
+      primitiveType: 'rectangle', width: { type: 'static', value: 100 }, height: { type: 'static', value: 60 },
+      position: { type: 'static', value: [0, 0] }, strokes: [],
+      fills: [{ type: 'solid', color: { type: 'static', value: [1, 0, 0, 1] } }],
+    };
+
+    if (channel === 'geometry') {
+      shape.width = { type: 'keyframed', keyframes: [{ frame: 0, value: 100 }, { frame: 30, value: 200 }] };
+    } else {
+      shape.fills[0].opacity = { type: 'keyframed', keyframes: [{ frame: 0, value: 1 }, { frame: 30, value: 0.5 }] };
+    }
+    const ir = createMinimalIR([createMinimalLayer({
+      orderIndex: 0, name: 'animated-shape', type: 'shape', content: { shapes: [shape] },
+    })]);
+
+    expect(() => convertIRToGE(ir)).toThrow('Animated shape geometry and paints are not supported yet');
+  });
+
   it('splits divergent stroke geometry into independent GE Shape components', () => {
     const ir = createMinimalIR([createMinimalLayer({
       orderIndex: 0,
@@ -1930,24 +1976,24 @@ describe('convertIRToGE', () => {
       content: {
         shapes: [{
           primitiveType: IRShapePrimitiveType.Rectangle,
-          width: 100,
-          height: 60,
-          fills: [{ type: IRPaintType.Solid, color: [1, 1, 1, 1] }],
+          width: { type: 'static', value: 100 },
+          height: { type: 'static', value: 60 },
+          fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 1, 1, 1] } }],
           strokes: [
             {
-              paint: { type: IRPaintType.Solid, color: [1, 0, 0, 1] },
-              width: 2,
+              paint: { type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } },
+              width: { type: 'static', value: 2 },
               cap: 'butt',
               join: 'miter',
             },
             {
-              paint: { type: IRPaintType.Solid, color: [0, 0, 1, 1] },
-              width: 6,
+              paint: { type: IRPaintType.Solid, color: { type: 'static', value: [0, 0, 1, 1] } },
+              width: { type: 'static', value: 6 },
               cap: 'square',
               join: 'bevel',
             },
           ],
-          position: [0, 0],
+          position: { type: 'static', value: [0, 0] },
         }],
       },
     })]);
@@ -2340,17 +2386,17 @@ describe('GE layer generation', () => {
           shapes: [
             {
               primitiveType: IRShapePrimitiveType.Custom,
-              customPaths: [
+              customPaths: { type: 'static', value: [
                 {
                   points: [{ x: 0, y: 0 }],
                   inTangents: [{ x: 0, y: 0 }],
                   outTangents: [{ x: 0, y: 0 }],
                   closed: true,
                 },
-              ],
+              ] },
               fills: [],
               strokes: [],
-              position: [0, 0],
+              position: { type: 'static', value: [0, 0] },
             },
           ],
         },
@@ -2548,11 +2594,11 @@ describe('GE layer generation', () => {
           shapes: [
             {
               primitiveType: IRShapePrimitiveType.Rectangle,
-              width: 100,
-              height: 100,
-              fills: [{ type: IRPaintType.Solid, color: [1, 0, 0, 1] }],
+              width: { type: 'static', value: 100 },
+              height: { type: 'static', value: 100 },
+              fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } }],
               strokes: [],
-              position: [0, 0],
+              position: { type: 'static', value: [0, 0] },
             },
           ],
         },

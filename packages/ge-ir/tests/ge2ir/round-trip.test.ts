@@ -1956,7 +1956,11 @@ describe('ge2ir convertGEToIR', () => {
       });
       expect(sourceShape?.primitiveType).toBe(expectedPrimitive);
       if (sourceShape?.primitiveType === IRShapePrimitiveType.Custom) {
-        expect(sourceShape.customPaths[0].points).toHaveLength(path.points.length);
+        expect(sourceShape.customPaths.type).toBe('static');
+        if (sourceShape.customPaths.type !== 'static') {
+          throw new Error('Expected static mask geometry');
+        }
+        expect(sourceShape.customPaths.value[0].points).toHaveLength(path.points.length);
       }
       const targetLayerData = targetLayer == null
         ? undefined
@@ -2428,17 +2432,18 @@ describe('ge2ir convertGEToIR', () => {
           shapes: [
             {
               primitiveType: IRShapePrimitiveType.Rectangle,
-              width: 100,
-              height: 60,
+              width: { type: 'static', value: 100 },
+              height: { type: 'static', value: 60 },
               fills: [
                 {
                   type: IRPaintType.Texture,
                   assetId: 'image:shape-texture',
                   scaleMode: IRTextureScaleMode.Tile,
+                  opacity: { type: 'static', value: 0.4 },
                 },
               ],
               strokes: [],
-              position: [0, 0],
+              position: { type: 'static', value: [0, 0] },
             },
           ],
         },
@@ -2457,6 +2462,7 @@ describe('ge2ir convertGEToIR', () => {
     const sourcePaint = (sourceShape?.['fills'] as Array<Record<string, unknown>> | undefined)?.[0];
 
     expect(sourcePaint?.['scaleMode']).toBe(TexturePaintScaleMode.Tile);
+    expect(sourcePaint?.['opacity']).toBe(0.4);
 
     const imported = convertGEToIRScene(sourceGE as unknown as Record<string, unknown>, { frameRate: 30 });
     const result = getIRSceneEntryComposition(imported.scene);
@@ -2467,6 +2473,7 @@ describe('ge2ir convertGEToIR', () => {
       type: IRPaintType.Texture,
       assetId: expect.any(String),
       scaleMode: IRTextureScaleMode.Tile,
+      opacity: { type: 'static', value: 0.4 },
     });
     expect(imported.scene.assets).toContainEqual({
       id: paint?.type === IRPaintType.Texture ? paint.assetId : undefined,
@@ -2509,16 +2516,16 @@ describe('ge2ir convertGEToIR', () => {
       content: {
         shapes: [{
           primitiveType: IRShapePrimitiveType.Rectangle,
-          width: 100,
-          height: 60,
+          width: { type: 'static', value: 100 },
+          height: { type: 'static', value: 60 },
           fills: [{
             type: IRPaintType.LinearGradient,
-            gradientStops: [[0, 1, 0, 0, 1], [1, 0, 0, 1, 1]],
-            gradientStart: [0, 0],
-            gradientEnd: [100, 0],
+            gradientStops: { type: 'static', value: [[0, 1, 0, 0, 1], [1, 0, 0, 1, 1]] },
+            gradientStart: { type: 'static', value: [0, 0] },
+            gradientEnd: { type: 'static', value: [100, 0] },
           }],
           strokes: [],
-          position: [0, 0],
+          position: { type: 'static', value: [0, 0] },
         }],
       },
     })]);
@@ -2551,25 +2558,25 @@ describe('ge2ir convertGEToIR', () => {
       content: {
         shapes: [{
           primitiveType: IRShapePrimitiveType.Rectangle,
-          width: 100,
-          height: 60,
-          cornerRadius: 15,
+          width: { type: 'static', value: 100 },
+          height: { type: 'static', value: 60 },
+          cornerRadius: { type: 'static', value: 15 },
           fills: [],
           strokes: [
             {
-              paint: { type: IRPaintType.Solid, color: [1, 0, 0, 1] },
-              width: 2,
+              paint: { type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } },
+              width: { type: 'static', value: 2 },
               cap: 'round',
               join: 'bevel',
             },
             {
-              paint: { type: IRPaintType.Solid, color: [0, 0, 1, 1] },
-              width: 2,
+              paint: { type: IRPaintType.Solid, color: { type: 'static', value: [0, 0, 1, 1] } },
+              width: { type: 'static', value: 2 },
               cap: 'round',
               join: 'bevel',
             },
           ],
-          position: [0, 0],
+          position: { type: 'static', value: [0, 0] },
         }],
       },
     })]);
@@ -2582,12 +2589,12 @@ describe('ge2ir convertGEToIR', () => {
     if (shape?.primitiveType !== IRShapePrimitiveType.Rectangle) {
       throw new Error('Expected Rectangle shape.');
     }
-    expect(shape.cornerRadius).toBeCloseTo(15, 3);
+    expect(shape.cornerRadius).toEqual({ type: 'static', value: expect.closeTo(15, 3) });
     expect(shape.strokes).toHaveLength(2);
     expect(shape.strokes[0]).toMatchObject({ cap: 'round', join: 'bevel' });
-    expect(shape.strokes[0].width).toBeCloseTo(2, 2);
+    expect(shape.strokes[0].width).toEqual({ type: 'static', value: expect.closeTo(2, 2) });
     expect(shape.strokes[1]).toMatchObject({ cap: 'round', join: 'bevel' });
-    expect(shape.strokes[1].width).toBeCloseTo(2, 2);
+    expect(shape.strokes[1].width).toEqual({ type: 'static', value: expect.closeTo(2, 2) });
   });
 
   it('merges an ir2ge pivot-container pair back into one semantic layer', () => {
@@ -2811,11 +2818,11 @@ describe('ge2ir convertGEToIR', () => {
             shapes: [
               {
                 primitiveType: IRShapePrimitiveType.Rectangle,
-                width: 100,
-                height: 100,
-                fills: [{ type: IRPaintType.Solid, color: [1, 0, 0, 1] }],
+                width: { type: 'static', value: 100 },
+                height: { type: 'static', value: 100 },
+                fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } }],
                 strokes: [],
-                position: [0, 0],
+                position: { type: 'static', value: [0, 0] },
               },
             ],
           },
@@ -2872,11 +2879,11 @@ describe('ge2ir convertGEToIR', () => {
         content: {
           shapes: [{
             primitiveType: IRShapePrimitiveType.Rectangle,
-            width: 100,
-            height: 100,
-            fills: [{ type: IRPaintType.Solid, color: [1, 0, 0, 1] }],
+            width: { type: 'static', value: 100 },
+            height: { type: 'static', value: 100 },
+            fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } }],
             strokes: [],
-            position: [0, 0],
+            position: { type: 'static', value: [0, 0] },
           }],
         },
         transform: {

@@ -2,7 +2,21 @@ import type { IRParticleContent } from './particle.js';
 import type { IRBezierPath, IRShape } from './shape.js';
 import type { IRColor, IREndBehavior, IRLayerTime, IRPrecompTime, IRTransform } from './value-types.js';
 
-/** Static text style; shaping, fallback fonts, baselines, wrapping and overflow are consumer-defined. */
+/**
+ * Non-empty [start, end) range in UTF-16 code units; must not split surrogate pairs.
+ * Omitted styles inherit from IRTextContent.
+ */
+export interface IRTextStyleRange {
+  start: number;
+  end: number;
+  /** Resolves family, weight and style from a Font Asset. */
+  fontAssetId?: string;
+  fontSize?: number;
+  color?: IRColor;
+  letterSpacing?: number;
+}
+
+/** Static text with block layout and range styles; font fallback, shaping and glyph metrics are consumer-defined. */
 export interface IRTextContent {
   color: IRColor;
   text: string;
@@ -14,6 +28,25 @@ export interface IRTextContent {
   /** Vertical advance between lines in Layer-local pixels, not a fontSize multiplier. */
   lineHeight: number;
   textAlign: 'left' | 'center' | 'right';
+  /** Sorted, non-overlapping; uncovered text keeps the default style. */
+  styleRanges?: IRTextStyleRange[];
+  /**
+   * Defaults to auto-width. Fixed constrains both localBounds dimensions; auto-height constrains width.
+   * Other dimensions are measured from text after line breaking.
+   */
+  sizeMode?: 'fixed' | 'auto-width' | 'auto-height';
+  /**
+   * Defaults to false (only explicit \n breaks). True wraps to the constrained width;
+   * requires fixed or auto-height. Break opportunities are consumer-defined.
+   */
+  wrap?: boolean;
+  /**
+   * Defaults to visible. Clip crops to the resolved box; shrink uniformly reduces the laid-out block,
+   * including spacing, to fit without reflow. Resolve wrapping and dimensions before overflow, then alignment.
+   */
+  overflow?: 'visible' | 'clip' | 'shrink';
+  /** Defaults to top; aligns within the resolved box after shrinking. */
+  verticalAlign?: 'top' | 'center' | 'bottom';
 }
 
 /** Operations used to combine paths in the ordered Layer mask stack. */
@@ -132,11 +165,16 @@ export interface IRImageLayer extends IRLayerBase {
   localBounds: IRLocalBounds;
 }
 
-/** Static text and style animated through the Layer transform; measured bounds are optional. */
+/** Static text, styles and layout animated through the Layer transform. */
 export interface IRTextLayer extends IRLayerBase {
   type: 'text';
   content: IRTextContent;
-  /** Optional measured or fixed text display bounds. */
+  /**
+   * Layout box in local pixels, not glyph bounds; defaults to origin (0, 0) when omitted.
+   * Required for fixed/auto-height, with positive constrained dimensions. Automatic dimensions are
+   * finite non-negative measurement hints (0 if unmeasured); recompute from text, never use as constraints.
+   * Resizing preserves the origin and transform anchor.
+   */
   localBounds?: IRLocalBounds;
 }
 
@@ -152,13 +190,13 @@ export interface IRSolidLayer extends IRLayerBase {
   localBounds: IRLocalBounds;
 }
 
-/** Static vector geometry and paints; shape order is independent of Layer parenting. */
+/** Vector geometry and paints with independent animation; shape order is independent of Layer parenting. */
 export interface IRShapeContent {
   /** Back-to-front painter order: first is bottommost, last is topmost. */
   shapes: IRShape[];
 }
 
-/** Ordered static shapes animated together through the Layer transform. */
+/** Ordered shapes with content animation and a shared Layer transform. */
 export interface IRShapeLayer extends IRLayerBase {
   type: 'shape';
   content: IRShapeContent;

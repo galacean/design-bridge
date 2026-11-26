@@ -1,3 +1,5 @@
+import type { IRBezierPath, IRGradientColorStop } from './shape.js';
+
 /**
  * Behavior after the timeline's exclusive end: destroy deactivates, continue advances local time,
  * freeze holds the last pre-end state, and loop wraps to the start.
@@ -79,7 +81,7 @@ export interface IRRotation {
  */
 export type IRSpatialTangent = IRVec2 | IRVec3;
 /** Numeric property payload; the owning channel determines tuple dimensions, units and valid ranges. */
-export type IRPropertyValue = number | IRVec2 | IRVec3 | IRColor;
+export type IRPropertyValue = number | IRVec2 | IRVec3 | IRColor | IRGradientColorStop[] | IRBezierPath[];
 
 /** Segment-normalized time/value coordinates; x is in 0..1 and y may overshoot. */
 export interface IRBezierHandle {
@@ -98,6 +100,8 @@ export interface IRBezierHandle {
  * Omitting both temporal handles gives linear interpolation. One-sided completion, extrapolation
  * and exact discontinuity-boundary sampling are not specified; supply both handles for portability.
  * Position-path controls are A.value + A.spatialOut and end + B.spatialIn.
+ * Gradient stops and path coordinates interpolate component-wise by array index; their owning fields
+ * define compatible structures. Spatial tangents apply only to transform.position.
  */
 export interface IRKeyframe<T extends IRPropertyValue = IRPropertyValue> {
   /** Absolute Composition frame, including subframes; do not add Layer inFrame. */

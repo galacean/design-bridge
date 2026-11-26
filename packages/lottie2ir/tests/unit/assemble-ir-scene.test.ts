@@ -946,10 +946,10 @@ describe('assembleLottieIRScene', () => {
 
     expect(firstFill).toMatchObject({
       type: 'linear-gradient',
-      gradientStops: [
+      gradientStops: { type: 'static', value: [
         [0, 1, 0, 0, 1],
         [1, 0, 0, 1, 1],
-      ],
+      ] },
     });
     expect(result.diagnostics).toContainEqual(
       expect.objectContaining({

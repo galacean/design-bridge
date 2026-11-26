@@ -276,73 +276,73 @@ const invalidAnimatedAnchor: IRLayer = {
 };
 const invalidShapeSize: IRShape = {
   primitiveType: 'rectangle',
-  width: 10,
-  height: 10,
+  width: { type: 'static', value: 10 },
+  height: { type: 'static', value: 10 },
   fills: [],
   strokes: [],
-  position: [0, 0],
+  position: { type: 'static', value: [0, 0] },
   // @ts-expect-error Shape dimensions are carried by primitive-specific fields.
   size: [10, 10],
 };
 const validShapeStroke: IRShapeStroke = {
-  paint: { type: 'solid', color: [1, 0, 0, 1] },
-  width: 2,
+  paint: { type: 'solid', color: { type: 'static', value: [1, 0, 0, 1] } },
+  width: { type: 'static', value: 2 },
   cap: 'round',
   join: 'bevel',
 };
 // @ts-expect-error Every stroke owns its width, cap, and join.
-const invalidShapeStroke: IRShapeStroke = { paint: { type: 'solid', color: [1, 0, 0, 1] } };
+const invalidShapeStroke: IRShapeStroke = { paint: { type: 'solid', color: { type: 'static', value: [1, 0, 0, 1] } } };
 const invalidSharedStrokeStyle: IRShape = {
   primitiveType: 'rectangle',
-  width: 10,
-  height: 10,
+  width: { type: 'static', value: 10 },
+  height: { type: 'static', value: 10 },
   fills: [],
   strokes: [validShapeStroke],
-  position: [0, 0],
+  position: { type: 'static', value: [0, 0] },
   // @ts-expect-error Stroke geometry belongs to each IRShapeStroke.
   strokeWidth: 2,
 };
 const invalidRectangleRoundness: IRShape = {
   primitiveType: 'rectangle',
-  width: 10,
-  height: 10,
+  width: { type: 'static', value: 10 },
+  height: { type: 'static', value: 10 },
   fills: [],
   strokes: [],
-  position: [0, 0],
+  position: { type: 'static', value: [0, 0] },
   // @ts-expect-error Rectangle corners use local-pixel cornerRadius.
-  roundness: 10,
+  roundness: { type: 'static', value: 10 },
 };
 // @ts-expect-error Rectangle geometry requires both width and height.
 const invalidRectangleGeometry: IRShape = {
   primitiveType: 'rectangle',
   fills: [],
   strokes: [],
-  position: [0, 0],
+  position: { type: 'static', value: [0, 0] },
 };
 const invalidGradientColor: IRGradientPaint = {
   type: 'linear-gradient',
-  gradientStops: [[0, 1, 1, 1, 1]],
-  gradientStart: [0, 0],
-  gradientEnd: [1, 0],
+  gradientStops: { type: 'static', value: [[0, 1, 1, 1, 1]] },
+  gradientStart: { type: 'static', value: [0, 0] },
+  gradientEnd: { type: 'static', value: [1, 0] },
   // @ts-expect-error Gradient color is fully represented by gradientStops.
   color: [1, 1, 1, 1],
 };
 // @ts-expect-error Every gradient requires both spatial endpoints.
 const _invalidGradientWithoutStart: IRGradientPaint = {
   type: 'radial-gradient',
-  gradientStops: [[0, 1, 1, 1, 1]],
-  gradientEnd: [1, 0],
+  gradientStops: { type: 'static', value: [[0, 1, 1, 1, 1]] },
+  gradientEnd: { type: 'static', value: [1, 0] },
 };
 // @ts-expect-error Every gradient requires both spatial endpoints.
 const _invalidGradientWithoutEnd: IRGradientPaint = {
   type: 'angular-gradient',
-  gradientStops: [[0, 1, 1, 1, 1]],
-  gradientStart: [0, 0],
+  gradientStops: { type: 'static', value: [[0, 1, 1, 1, 1]] },
+  gradientStart: { type: 'static', value: [0, 0] },
 };
 const invalidTextureScaleMode: IRShape = {
   primitiveType: 'rectangle',
-  width: 10,
-  height: 10,
+  width: { type: 'static', value: 10 },
+  height: { type: 'static', value: 10 },
   fills: [
     {
       type: 'texture',
@@ -352,7 +352,7 @@ const invalidTextureScaleMode: IRShape = {
     },
   ],
   strokes: [],
-  position: [0, 0],
+  position: { type: 'static', value: [0, 0] },
 };
 const validTextureScaleMode: IRTexturePaint = {
   type: 'texture',
@@ -425,6 +425,18 @@ const validText: IRLayer = {
     textAlign: 'left',
   },
 };
+
+const fixedTextLayout: IRTextContent = {
+  ...validText.content, sizeMode: 'fixed', wrap: true, overflow: 'shrink', verticalAlign: 'center',
+};
+// @ts-expect-error Size modes use string literals.
+const invalidTextSizeMode: IRTextContent['sizeMode'] = 2;
+// @ts-expect-error Wrap requires a boolean.
+const invalidTextWrap: IRTextContent['wrap'] = { type: 'static', value: true };
+// @ts-expect-error Overflow does not accept display.
+const invalidTextOverflow: IRTextContent['overflow'] = 'display';
+// @ts-expect-error Vertical alignment uses center.
+const invalidTextVerticalAlign: IRTextContent['verticalAlign'] = 'middle';
 
 type LegacyTextField =
   'content' | 'fontFamily' | 'fontWeight' | 'fontStyle' | 'autoWidth' | 'width' | 'height' | 'anchorAdjust';
@@ -500,7 +512,8 @@ const validShape: IRLayer = {
   visible: true,
   content: {
     shapes: [{
-      primitiveType: 'rectangle', width: 10, height: 10, fills: [], strokes: [], position: [0, 0],
+      primitiveType: 'rectangle', width: { type: 'static', value: 10 }, height: { type: 'static', value: 10 },
+      fills: [], strokes: [], position: { type: 'static', value: [0, 0] },
     }],
   },
 };
@@ -519,6 +532,7 @@ const invalidLegacyShape: IRLayer = {
 };
 
 void [
+  fixedTextLayout, invalidTextSizeMode, invalidTextWrap, invalidTextOverflow, invalidTextVerticalAlign,
   validCompositionId,
   validComposition,
   validContinueEndBehavior,

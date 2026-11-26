@@ -307,6 +307,15 @@ export function validateAssetReferences(
           break;
         case IRLayerType.Text:
           validateTextFontAssetReference(fontContext, content, contentPath, assetById);
+          if (Array.isArray(content['styleRanges'])) {
+            for (const [rangeIndex, range] of content['styleRanges'].entries()) {
+              if (isRecord(range)) {
+                validateTextFontAssetReference(
+                  fontContext, range, `${contentPath}.styleRanges[${rangeIndex}]`, assetById,
+                );
+              }
+            }
+          }
 
           break;
         case IRLayerType.Shape:

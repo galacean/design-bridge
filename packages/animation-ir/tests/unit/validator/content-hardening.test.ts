@@ -318,29 +318,29 @@ describe('animation and content invariants', () => {
             primitiveType: IRShapePrimitiveType.Star,
             fills: [],
             strokes: [{
-              paint: { type: IRPaintType.Solid, color: [1, 1, 1, 1] },
-              width: -1,
+              paint: { type: IRPaintType.Solid, color: { type: 'static', value: [1, 1, 1, 1] } },
+              width: { type: 'static', value: -1 },
               cap: 'invalid',
               join: 'invalid',
             }],
-            position: [0, 0],
+            position: { type: 'static', value: [0, 0] },
             pointCount: 1,
-            innerRoundness: 101,
-            outerRoundness: -1,
+            innerRoundness: { type: 'static', value: 101 },
+            outerRoundness: { type: 'static', value: -1 },
           },
         ],
       },
     });
 
     expect(errorPaths(composition, 'IR_SHAPE_DATA_INVALID')).toEqual([
-      'layers[0].content.shapes[0].strokes[0].width',
+      'layers[0].content.shapes[0].strokes[0].width.value',
       'layers[0].content.shapes[0].strokes[0].cap',
       'layers[0].content.shapes[0].strokes[0].join',
       'layers[0].content.shapes[0].pointCount',
       'layers[0].content.shapes[0].innerRadius',
       'layers[0].content.shapes[0].outerRadius',
-      'layers[0].content.shapes[0].innerRoundness',
-      'layers[0].content.shapes[0].outerRoundness',
+      'layers[0].content.shapes[0].innerRoundness.value',
+      'layers[0].content.shapes[0].outerRoundness.value',
     ]);
   });
 
@@ -356,24 +356,24 @@ describe('animation and content invariants', () => {
             fills: [
               {
                 type: IRPaintType.LinearGradient,
-                gradientStops: [
+                gradientStops: { type: 'static', value: [
                   [0.8, 1, 1, 1, 1],
                   [0.2, 2, 1, 1, 1],
-                ],
-                gradientStart: [0, 0],
-                gradientEnd: [100, 0],
+                ] },
+                gradientStart: { type: 'static', value: [0, 0] },
+                gradientEnd: { type: 'static', value: [100, 0] },
               },
             ],
             strokes: [],
-            position: [0, 0],
+            position: { type: 'static', value: [0, 0] },
           },
         ],
       },
     });
 
     expect(errorPaths(composition, 'IR_SHAPE_PAINT_INVALID')).toEqual([
-      'layers[0].content.shapes[0].fills[0].gradientStops[1]',
-      'layers[0].content.shapes[0].fills[0].gradientStops[1][0]',
+      'layers[0].content.shapes[0].fills[0].gradientStops.value[1]',
+      'layers[0].content.shapes[0].fills[0].gradientStops.value[1][0]',
     ]);
   });
 
@@ -385,27 +385,27 @@ describe('animation and content invariants', () => {
       content: {
         shapes: [{
           primitiveType: IRShapePrimitiveType.Rectangle,
-          width: 100,
-          height: 100,
+          width: { type: 'static', value: 100 },
+          height: { type: 'static', value: 100 },
           fills: [
             {
               type: IRPaintType.LinearGradient,
-              gradientStops: [[0, 1, 1, 1, 1], [1, 0, 0, 0, 1]],
-              gradientStart: [0, 0],
+              gradientStops: { type: 'static', value: [[0, 1, 1, 1, 1], [1, 0, 0, 0, 1]] },
+              gradientStart: { type: 'static', value: [0, 0] },
             },
             {
               type: IRPaintType.RadialGradient,
-              gradientStops: [[0, 1, 1, 1, 1], [1, 0, 0, 0, 1]],
-              gradientEnd: [100, 0],
+              gradientStops: { type: 'static', value: [[0, 1, 1, 1, 1], [1, 0, 0, 0, 1]] },
+              gradientEnd: { type: 'static', value: [100, 0] },
             },
           ],
           strokes: [],
-          position: [0, 0],
+          position: { type: 'static', value: [0, 0] },
         }],
       },
     });
 
-    expect(errorPaths(composition, 'IR_SHAPE_PAINT_INVALID')).toEqual([
+    expect(errorPaths(composition, 'IR_ANIMATED_PROPERTY_INVALID')).toEqual([
       'layers[0].content.shapes[0].fills[0].gradientEnd',
       'layers[0].content.shapes[0].fills[1].gradientStart',
     ]);
@@ -469,19 +469,19 @@ describe('animation and content invariants', () => {
           sourceGroup: 'group',
           shapes: [{
             primitiveType: 'custom',
-            customPaths: [{
+            customPaths: { type: 'static', value: [{
               points: [{ x: 0, y: 0, tag: 'start' }],
               inTangents: [{ x: 0, y: 0 }],
               outTangents: [{ x: 0, y: 0 }],
               closed: true,
               winding: 'clockwise',
-            }],
+            }] },
             fills: [
               {
                 type: 'linear-gradient',
-                gradientStops: [[0, 1, 1, 1, 1], [1, 0, 0, 0, 1]],
-                gradientStart: [0, 0],
-                gradientEnd: [10, 0],
+                gradientStops: { type: 'static', value: [[0, 1, 1, 1, 1], [1, 0, 0, 0, 1]] },
+                gradientStart: { type: 'static', value: [0, 0] },
+                gradientEnd: { type: 'static', value: [10, 0] },
                 color: [1, 1, 1, 1],
               },
               {
@@ -491,7 +491,7 @@ describe('animation and content invariants', () => {
               },
             ],
             strokes: [],
-            position: [0, 0],
+            position: { type: 'static', value: [0, 0] },
             size: [10, 10],
             fillRule: 'even-odd',
             trimPath: { start: 0, end: 100 },
@@ -582,21 +582,21 @@ describe('animation and content invariants', () => {
               fills: [
                 null,
                 { type: 'invalid' },
-                { type: IRPaintType.LinearGradient, gradientStops: [] },
+                { type: IRPaintType.LinearGradient, gradientStops: { type: 'static', value: [] } },
                 {
                   type: IRPaintType.RadialGradient,
-                  gradientStops: [['bad'], [0, 1, 1, 1, 1]],
-                  gradientStart: [0],
-                  gradientEnd: null,
+                  gradientStops: { type: 'static', value: [['bad'], [0, 1, 1, 1, 1]] },
+                  gradientStart: { type: 'static', value: [0] },
+                  gradientEnd: { type: 'static', value: null },
                   color: [2, 0, 0, 1],
                 },
                 { type: IRPaintType.Texture, assetId: null, texture: {}, scaleMode: 'fit' },
               ],
               strokes: null,
-              position: null,
+              position: { type: 'static', value: null },
               size: null,
               strokeJoin: 'invalid',
-              customPaths: [null],
+              customPaths: { type: 'static', value: [null] },
             },
           ],
         },

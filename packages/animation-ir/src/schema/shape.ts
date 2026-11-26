@@ -1,4 +1,4 @@
-import type { IRColor, IRVec2 } from './value-types.js';
+import type { IRAnimatedProperty, IRColor, IRVec2 } from './value-types.js';
 
 /**
  * Local-pixel cubic path. Segment i -> j uses controls points[i], points[i] + outTangents[i],
@@ -30,16 +30,20 @@ export type IRGradientColorStop = [number, number, number, number, number];
 /** Uniform normalized RGBA paint shared by Shape fills and strokes. */
 export interface IRSolidPaint {
   type: typeof IRPaintType.Solid;
-  color: IRColor;
+  color: IRAnimatedProperty<IRColor>;
+  /** 0..1, default 1; multiplies color alpha and Layer opacity. */
+  opacity?: IRAnimatedProperty<number>;
 }
 
-/** Static gradient with ordered color stops and endpoints in local pixels. */
+/** Animated gradient with ordered color stops and endpoints in local pixels. */
 export interface IRGradientPaint {
   type: typeof IRPaintType.LinearGradient | typeof IRPaintType.RadialGradient | typeof IRPaintType.AngularGradient;
-  /** Non-empty, nondecreasing positions; duplicate-stop edges are consumer-defined. */
-  gradientStops: IRGradientColorStop[];
-  gradientStart: IRVec2;
-  gradientEnd: IRVec2;
+  /** Non-empty, sorted stops; interpolation requires equal counts and pairs stops by index. */
+  gradientStops: IRAnimatedProperty<IRGradientColorStop[]>;
+  gradientStart: IRAnimatedProperty<IRVec2>;
+  gradientEnd: IRAnimatedProperty<IRVec2>;
+  /** 0..1, default 1; multiplies stop alpha and Layer opacity. */
+  opacity?: IRAnimatedProperty<number>;
 }
 
 /** Image placement policies within Shape bounds; individual values describe scaling and repetition. */
@@ -62,6 +66,8 @@ export interface IRTexturePaint {
   type: typeof IRPaintType.Texture;
   assetId: string;
   scaleMode?: IRTextureScaleMode;
+  /** 0..1, default 1; multiplies texture alpha and Layer opacity. */
+  opacity?: IRAnimatedProperty<number>;
 }
 
 /** Paint shared by fills and strokes; the type discriminant selects the required payload. */
@@ -90,7 +96,8 @@ export type IRLineJoin = (typeof IRLineJoin)[keyof typeof IRLineJoin];
 /** One stroke paint and its independent local-pixel geometry. */
 export interface IRShapeStroke {
   paint: IRShapePaint;
-  width: number;
+  /** Non-negative local pixels. */
+  width: IRAnimatedProperty<number>;
   cap: IRLineCap;
   join: IRLineJoin;
 }
@@ -104,63 +111,67 @@ export const IRShapePrimitiveType = {
   Star: 'star',
 } as const;
 
-/** Discriminant used to narrow IRShape to the matching static geometry contract. */
+/** Discriminant used to narrow IRShape to the matching geometry contract. */
 export type IRShapePrimitiveType = (typeof IRShapePrimitiveType)[keyof typeof IRShapePrimitiveType];
 
-/** Static geometry and paints; animation is applied through the owning Layer Transform. */
+/** Independently animated geometry and paints, positioned in Layer-local pixels. */
 export interface IRShapeStyle {
   /** Bottom-to-top; every fill is painted before every stroke. */
   fills: IRShapePaint[];
   /** Bottom-to-top above all fills. */
   strokes: IRShapeStroke[];
-  position: IRVec2;
+  position: IRAnimatedProperty<IRVec2>;
 }
 
 /** Compound cubic paths in local pixels; all paths share the Shape's fills, strokes and nonzero winding rule. */
 export interface IRCustomShape extends IRShapeStyle {
   primitiveType: typeof IRShapePrimitiveType.Custom;
-  /** One compound path using the fixed nonzero fill rule. */
-  customPaths: IRBezierPath[];
+  /**
+   * Non-empty. Continuous segments match paths and vertices by index, preserving path counts,
+   * per-path vertex counts and closed flags. Coordinates and tangent offsets interpolate independently;
+   * hold segments may change topology.
+   */
+  customPaths: IRAnimatedProperty<IRBezierPath[]>;
 }
 
-/** Static rectangle with dimensions and optional rounded corners in local pixels. */
+/** Rectangle with dimensions and optional rounded corners in local pixels. */
 export interface IRRectangleShape extends IRShapeStyle {
   primitiveType: typeof IRShapePrimitiveType.Rectangle;
-  width: number;
-  height: number;
-  /** Local pixels, at most half of the shorter edge. */
-  cornerRadius?: number;
+  width: IRAnimatedProperty<number>;
+  height: IRAnimatedProperty<number>;
+  /** Default 0; non-negative pixels, at most half the shorter sampled edge. */
+  cornerRadius?: IRAnimatedProperty<number>;
 }
 
-/** Static ellipse with independent horizontal and vertical radii in local pixels. */
+/** Ellipse with independent horizontal and vertical radii in local pixels. */
 export interface IREllipseShape extends IRShapeStyle {
   primitiveType: typeof IRShapePrimitiveType.Ellipse;
-  xRadius: number;
-  yRadius: number;
+  xRadius: IRAnimatedProperty<number>;
+  yRadius: IRAnimatedProperty<number>;
 }
 
 /** Regular polygon defined by a local-pixel radius, vertex count and optional corner rounding. */
 export interface IRPolygonShape extends IRShapeStyle {
   primitiveType: typeof IRShapePrimitiveType.Polygon;
   pointCount: number;
-  radius: number;
-  /** Percentage in the 0..100 range. */
-  roundness?: number;
+  radius: IRAnimatedProperty<number>;
+  /** Percentage in the 0..100 range; default 0. */
+  roundness?: IRAnimatedProperty<number>;
 }
 
 /** Star with alternating inner and outer radii in local pixels and independently rounded corners. */
 export interface IRStarShape extends IRShapeStyle {
   primitiveType: typeof IRShapePrimitiveType.Star;
   pointCount: number;
-  innerRadius: number;
-  outerRadius: number;
-  /** Percentage in the 0..100 range. */
-  innerRoundness?: number;
-  /** Percentage in the 0..100 range. */
-  outerRoundness?: number;
+  innerRadius: IRAnimatedProperty<number>;
+  outerRadius: IRAnimatedProperty<number>;
+  /** Percentage in the 0..100 range; default 0. */
+  innerRoundness?: IRAnimatedProperty<number>;
+  /** Percentage in the 0..100 range; default 0. */
+  outerRoundness?: IRAnimatedProperty<number>;
 }
 
-/** Static vector geometry discriminated by primitiveType; each Shape carries its own paints and local position. */
+/** Vector geometry discriminated by primitiveType; each Shape carries its own paints and local position. */
 export type IRShape =
   | IRCustomShape | IRRectangleShape | IREllipseShape
   | IRPolygonShape | IRStarShape;

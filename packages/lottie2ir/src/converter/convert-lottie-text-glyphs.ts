@@ -91,15 +91,18 @@ export function convertLottieTextGlyphs(
         ]);
 
         for (const shape of converted.shapes) {
-          if (shape.primitiveType !== IRShapePrimitiveType.Custom) {
+          if (shape.primitiveType !== IRShapePrimitiveType.Custom ||
+            shape.customPaths.type !== 'static' || shape.position.type !== 'static') {
             return undefined;
           }
-          for (const path of shape.customPaths) {
+          const position = shape.position.value;
+
+          for (const path of shape.customPaths.value) {
             paths.push({
               closed: path.closed,
               points: path.points.map(point => ({
-                x: (point.x + shape.position[0]) * scale + x,
-                y: (point.y + shape.position[1]) * scale + y,
+                x: (point.x + position[0]) * scale + x,
+                y: (point.y + position[1]) * scale + y,
               })),
               inTangents: path.inTangents.map(point => ({ x: point.x * scale, y: point.y * scale })),
               outTangents: path.outTangents.map(point => ({ x: point.x * scale, y: point.y * scale })),
@@ -115,9 +118,9 @@ export function convertLottieTextGlyphs(
 
   return paths.length === 0 ? [] : [{
     primitiveType: IRShapePrimitiveType.Custom,
-    customPaths: paths,
-    position: [0, 0],
-    fills: [{ type: IRPaintType.Solid, color: fillColor }],
+    customPaths: { type: 'static', value: paths },
+    position: { type: 'static', value: [0, 0] },
+    fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: fillColor } }],
     strokes: [],
   }];
 }

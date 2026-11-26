@@ -301,11 +301,11 @@ describe('assertComposition', () => {
   it('accepts valid shape data and rejects invalid shape paint', () => {
     const validShape: IRShape = {
       primitiveType: IRShapePrimitiveType.Rectangle,
-      width: 10,
-      height: 10,
-      fills: [{ type: IRPaintType.Solid, color: [1, 0, 0, 1] }],
+      width: { type: 'static', value: 10 },
+      height: { type: 'static', value: 10 },
+      fills: [{ type: IRPaintType.Solid, color: { type: 'static', value: [1, 0, 0, 1] } }],
       strokes: [],
-      position: [0, 0],
+      position: { type: 'static', value: [0, 0] },
     };
     const invalidShape = {
       ...validShape,
@@ -331,8 +331,8 @@ describe('assertComposition', () => {
   it('validates texture paint through an Image Asset ID', () => {
     const validShape: IRShape = {
       primitiveType: IRShapePrimitiveType.Rectangle,
-      width: 10,
-      height: 10,
+      width: { type: 'static', value: 10 },
+      height: { type: 'static', value: 10 },
       fills: [
         {
           type: IRPaintType.Texture,
@@ -341,18 +341,18 @@ describe('assertComposition', () => {
       ],
       strokes: [{
         paint: { type: IRPaintType.Texture, assetId: 'image:texture' },
-        width: 1,
+        width: { type: 'static', value: 1 },
         cap: 'butt',
         join: 'miter',
       }],
-      position: [0, 0],
+      position: { type: 'static', value: [0, 0] },
     };
     const invalidShape = {
       ...validShape,
       fills: [],
       strokes: [{
         paint: { type: IRPaintType.Texture, assetId: 'image:missing' },
-        width: 1,
+        width: { type: 'static', value: 1 },
         cap: 'butt',
         join: 'miter',
       }],
@@ -383,12 +383,12 @@ describe('assertComposition', () => {
   it('validates Rectangle cornerRadius in local pixels', () => {
     const makeRectangle = (cornerRadius: number): IRShape => ({
       primitiveType: IRShapePrimitiveType.Rectangle,
-      width: 100,
-      height: 40,
-      cornerRadius,
+      width: { type: 'static', value: 100 },
+      height: { type: 'static', value: 40 },
+      cornerRadius: { type: 'static', value: cornerRadius },
       fills: [],
       strokes: [],
-      position: [0, 0],
+      position: { type: 'static', value: [0, 0] },
     });
 
     expect(() => assertComposition(makeComposition({
@@ -402,11 +402,11 @@ describe('assertComposition', () => {
   it('rejects a Font Asset used as a shape texture', () => {
     const shape = {
       primitiveType: IRShapePrimitiveType.Rectangle,
-      width: 10,
-      height: 10,
+      width: { type: 'static', value: 10 },
+      height: { type: 'static', value: 10 },
       fills: [{ type: IRPaintType.Texture, assetId: 'font:texture' }],
       strokes: [],
-      position: [0, 0],
+      position: { type: 'static', value: [0, 0] },
     } as IRShape;
     const composition = makeComposition({
       layers: [makeLayer({ type: 'shape', content: { shapes: [shape] } })],
@@ -421,18 +421,18 @@ describe('assertComposition', () => {
   });
 
   it('enforces primitive-specific shape geometry', () => {
-    const common = { fills: [], strokes: [], position: [0, 0] };
+    const common = { fills: [], strokes: [], position: { type: 'static', value: [0, 0] } };
     const invalidShapes = [
-      { ...common, primitiveType: IRShapePrimitiveType.Custom, customPaths: [] },
+      { ...common, primitiveType: IRShapePrimitiveType.Custom, customPaths: { type: 'static', value: [] } },
       {
         ...common,
         primitiveType: IRShapePrimitiveType.Custom,
-        customPaths: [{ points: [], inTangents: [], outTangents: [], closed: true }],
+        customPaths: { type: 'static', value: [{ points: [], inTangents: [], outTangents: [], closed: true }] },
       },
-      { ...common, primitiveType: IRShapePrimitiveType.Rectangle, width: 10 },
-      { ...common, primitiveType: IRShapePrimitiveType.Ellipse, xRadius: 5 },
-      { ...common, primitiveType: IRShapePrimitiveType.Polygon, pointCount: 2.5, radius: 5 },
-      { ...common, primitiveType: IRShapePrimitiveType.Star, pointCount: 5, outerRadius: 5 },
+      { ...common, primitiveType: IRShapePrimitiveType.Rectangle, width: { type: 'static', value: 10 } },
+      { ...common, primitiveType: IRShapePrimitiveType.Ellipse, xRadius: { type: 'static', value: 5 } },
+      { ...common, primitiveType: IRShapePrimitiveType.Polygon, pointCount: 2.5, radius: { type: 'static', value: 5 } },
+      { ...common, primitiveType: IRShapePrimitiveType.Star, pointCount: 5, outerRadius: { type: 'static', value: 5 } },
     ];
 
     for (const shape of invalidShapes) {
@@ -454,8 +454,8 @@ describe('assertComposition', () => {
     }];
     const makeTextureShape = (scaleMode: unknown): IRShape => ({
       primitiveType: IRShapePrimitiveType.Rectangle,
-      width: 10,
-      height: 10,
+      width: { type: 'static', value: 10 },
+      height: { type: 'static', value: 10 },
       fills: [
         {
           type: IRPaintType.Texture,
@@ -464,7 +464,7 @@ describe('assertComposition', () => {
         },
       ],
       strokes: [],
-      position: [0, 0],
+      position: { type: 'static', value: [0, 0] },
     });
 
     for (const scaleMode of Object.values(IRTextureScaleMode)) {

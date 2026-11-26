@@ -47,9 +47,13 @@ describe('IRScene Asset Registry', () => {
         makeLayer({
           id: 'shape', type: 'shape',
           content: { shapes: [{
-            primitiveType: 'rectangle', width: 10, height: 10, position: [0, 0],
+            primitiveType: 'rectangle', width: { type: 'static', value: 10 }, height: { type: 'static', value: 10 },
+            position: { type: 'static', value: [0, 0] },
             fills: [{ type: 'texture', assetId: 'missing-fill' }],
-            strokes: [{ paint: { type: 'texture', assetId: 'missing-stroke' }, width: 1, cap: 'butt', join: 'miter' }],
+            strokes: [{
+              paint: { type: 'texture', assetId: 'missing-stroke' },
+              width: { type: 'static', value: 1 }, cap: 'butt', join: 'miter',
+            }],
           }] },
         }),
         makeLayer({

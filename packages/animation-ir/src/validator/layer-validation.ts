@@ -217,8 +217,14 @@ function validateLayer(
   if (value['blendMode'] !== undefined && !isOneOfConst(value['blendMode'], IRBlendMode)) {
     ctx.error('IR_LAYER_BLEND_MODE_INVALID', `${path}.blendMode`, 'is invalid', layerId);
   }
+  const content = value['content'];
+  const textSizeMode = type === IRLayerType.Text && isRecord(content) ? content['sizeMode'] ?? 'auto-width' : undefined;
+
   if (value['localBounds'] !== undefined) {
-    validateLocalBounds(ctx, value['localBounds'], `${path}.localBounds`, layerId);
+    const automaticDimensions: Array<'width' | 'height'> = textSizeMode === 'auto-width'
+      ? ['width', 'height'] : textSizeMode === 'auto-height' ? ['height'] : [];
+
+    validateLocalBounds(ctx, value['localBounds'], `${path}.localBounds`, layerId, automaticDimensions);
   }
 
   if (type === IRLayerType.Image) {
@@ -248,6 +254,10 @@ function validateLayer(
       ctx.error('IR_TEXT_DATA_MISSING', `${path}.content`, 'content is required for text layers', layerId);
     } else {
       validateTextData(ctx, value['content'], `${path}.content`, layerId);
+      if (value['localBounds'] === undefined && (textSizeMode === 'fixed' || textSizeMode === 'auto-height')) {
+        ctx.error('IR_LAYER_LOCAL_BOUNDS_INVALID', `${path}.localBounds`,
+          'is required for fixed and auto-height text layout', layerId);
+      }
     }
   }
   if (type === IRLayerType.Null && value['content'] !== undefined) {

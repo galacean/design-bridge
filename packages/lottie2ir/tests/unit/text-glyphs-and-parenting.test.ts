@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { convertLottieToIR } from '@galacean/lottie2ir';
 import type { LottieJSON } from '@galacean/lottie2ir';
+import { convertIRToGE } from '@galacean/ge-ir';
+import { DataType, FillType } from '@galacean/effects-specification';
+import { expectStaticValue } from '../helpers/shape-test-helpers';
 
 const transform = {
   p: { a: 0, k: [0, 0, 0] }, a: { a: 0, k: [0, 0, 0] },
@@ -68,10 +71,20 @@ describe('Lottie glyph outlines and duplicate parent indices', () => {
     if (shape.primitiveType !== 'custom') {
       throw new Error('Expected compound path');
     }
-    expect(shape.customPaths).toHaveLength(4);
-    expect(shape.customPaths[0].points[0]).toEqual({ x: -12.5, y: -5 });
-    expect(shape.customPaths[2].points[0]).toEqual({ x: 2.5, y: -5 });
-    expect(shape.fills).toEqual([{ type: 'solid', color: [1, 0, 0, 1] }]);
+    const paths = expectStaticValue(shape.customPaths);
+
+    expect(paths).toHaveLength(4);
+    expect(paths[0].points[0]).toEqual({ x: -12.5, y: -5 });
+    expect(paths[2].points[0]).toEqual({ x: 2.5, y: -5 });
+    expect(shape.position).toEqual({ type: 'static', value: [0, 0] });
+    expect(shape.fills).toEqual([{ type: 'solid', color: { type: 'static', value: [1, 0, 0, 1] } }]);
+    const exported = convertIRToGE(result.scene).scene;
+    const component = exported.components?.find(item => item.dataType === DataType.ShapeComponent);
+
+    expect(component).toMatchObject({
+      fills: [{ type: FillType.Solid, color: { r: 1, g: 0, b: 0, a: 1 } }],
+      shapes: Array.from({ length: 4 }, () => expect.objectContaining({ close: true })),
+    });
     expect(JSON.stringify(input)).toBe(before);
   });
 
@@ -82,7 +95,7 @@ describe('Lottie glyph outlines and duplicate parent indices', () => {
     if (output.type !== 'shape' || output.content.shapes[0].primitiveType !== 'custom') {
       throw new Error('Expected outline shape');
     }
-    const paths = output.content.shapes[0].customPaths;
+    const paths = expectStaticValue(output.content.shapes[0].customPaths);
 
     expect(paths[0].points[0]).toEqual({ x: -25, y: -8 });
     expect(paths[4].points[0]).toEqual({ x: -10, y: 53 });

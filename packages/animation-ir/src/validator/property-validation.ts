@@ -3,6 +3,7 @@ import type { ValidationContext } from './context.js';
 import { isFiniteNumber, isNormalizedNumber, isNumberTuple, isRecord } from './value-validation.js';
 
 type AnimatedDimension = 2 | 3 | 4 | 'number';
+type AnimatedValueValidator = AnimatedDimension | ((value: unknown, path: string) => void);
 
 function validateBezierHandle(ctx: ValidationContext, value: unknown, path: string, layerId?: string): void {
   if (!isRecord(value)) {
@@ -21,15 +22,20 @@ function validateBezierHandle(ctx: ValidationContext, value: unknown, path: stri
 function validateAnimatedValue(
   ctx: ValidationContext,
   value: unknown,
-  dimension: AnimatedDimension,
+  valueValidator: AnimatedValueValidator,
   path: string,
   layerId?: string,
   normalized = false,
 ): void {
-  const valid = dimension === 'number' ? isFiniteNumber(value) : isNumberTuple(value, dimension);
+  if (typeof valueValidator === 'function') {
+    valueValidator(value, path);
+
+    return;
+  }
+  const valid = valueValidator === 'number' ? isFiniteNumber(value) : isNumberTuple(value, valueValidator);
 
   if (!valid) {
-    const expected = dimension === 'number' ? 'a finite number' : `a finite ${dimension}D tuple`;
+    const expected = valueValidator === 'number' ? 'a finite number' : `a finite ${valueValidator}D tuple`;
 
     ctx.error('IR_ANIMATED_PROPERTY_INVALID', path, `must be ${expected}`, layerId);
 
@@ -54,14 +60,19 @@ function validateSpatialTangent(ctx: ValidationContext, value: unknown, path: st
 export function validateAnimatedProperty(
   ctx: ValidationContext,
   property: unknown,
-  dimension: AnimatedDimension,
+  valueValidator: AnimatedValueValidator,
   path: string,
   layerId?: string,
-  options: { normalized?: boolean; allowSpatialTangents?: boolean } = {},
+  options: {
+    normalized?: boolean;
+    allowSpatialTangents?: boolean;
+    required?: boolean;
+    validateSegment?: (start: unknown, end: unknown, path: string) => void;
+  } = {},
 ): void {
   const { normalized = false, allowSpatialTangents = false } = options;
 
-  if (property === undefined) {
+  if (property === undefined && options.required !== true) {
     return;
   }
   if (!isRecord(property)) {
@@ -82,7 +93,7 @@ export function validateAnimatedProperty(
     if (property['value'] === undefined) {
       ctx.error('IR_ANIMATED_PROPERTY_INVALID', `${path}.value`, "is required when type is 'static'", layerId);
     } else {
-      validateAnimatedValue(ctx, property['value'], dimension, `${path}.value`, layerId, normalized);
+      validateAnimatedValue(ctx, property['value'], valueValidator, `${path}.value`, layerId, normalized);
     }
     if (property['keyframes'] !== undefined) {
       ctx.error(
@@ -142,10 +153,15 @@ export function validateAnimatedProperty(
     if (keyframe['value'] === undefined) {
       ctx.error('IR_KEYFRAME_INVALID', `${keyframePath}.value`, 'is required', layerId);
     } else {
-      validateAnimatedValue(ctx, keyframe['value'], dimension, `${keyframePath}.value`, layerId, normalized);
+      validateAnimatedValue(ctx, keyframe['value'], valueValidator, `${keyframePath}.value`, layerId, normalized);
     }
     if (keyframe['endValue'] !== undefined) {
-      validateAnimatedValue(ctx, keyframe['endValue'], dimension, `${keyframePath}.endValue`, layerId, normalized);
+      validateAnimatedValue(ctx, keyframe['endValue'], valueValidator, `${keyframePath}.endValue`, layerId, normalized);
+    }
+    const next: unknown = keyframes[index + 1];
+
+    if (keyframe['hold'] !== true && isRecord(next)) {
+      options.validateSegment?.(keyframe['value'], keyframe['endValue'] ?? next['value'], keyframePath);
     }
     if (keyframe['hold'] !== undefined && typeof keyframe['hold'] !== 'boolean') {
       ctx.error('IR_KEYFRAME_INVALID', `${keyframePath}.hold`, 'must be boolean when present', layerId);

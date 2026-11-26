@@ -238,6 +238,7 @@ requires approximation or GE-owned preserved data. Keeping a raw payload does no
 | Camera and renderer settings | Partial | Retains source cameras, depth/render settings, and referenced geometry in preserved data. |
 | Sprite metadata | Partial | Tint, atlas splits, sampling settings, alternate image URLs, and texture sheets use preserved data. |
 | Text and shape paints | Partial | Normalizes text metrics; gradients missing endpoints are dropped with a warning. |
+| Shape property export | Partial | Reads static geometry and paint properties, including paint opacity. Keyframed shape properties throw an unsupported-feature error. |
 | Mask references | Partial | Single resolvable masks; multiple or unresolved references remain source-specific. |
 | Precomp export | Partial | Opacity, nonzero source start, and stretch can cause diagnostics; clipping composes with masks. |
 | Particle editing | Partial | Maps supported parameters; export needs trusted source renderer, shape, and resources. |

@@ -3,7 +3,9 @@ import { IRPaintType, IRLineCap, IRLineJoin, IRShapePrimitiveType } from '@galac
 import type { IRGradientPaint, IRSolidPaint } from '@galacean/animation-ir';
 import type { LottieShapeElement } from '../../../src/common/conversion-types';
 import { convertLottieShapes } from '../../../src/converter/convert-lottie-shapes';
-import { expectShapePrimitive, minimalTransform, solidFill, solidStroke } from '../../helpers/shape-test-helpers';
+import {
+  expectShapePrimitive, expectStaticValue, minimalTransform, solidFill, solidStroke,
+} from '../../helpers/shape-test-helpers';
 
 describe('convertLottieShapes style and edge cases', () => {
   it('parses linear gradient fill', () => {
@@ -33,13 +35,13 @@ describe('convertLottieShapes style and edge cases', () => {
     const fill = result[0].fills[0] as IRGradientPaint;
 
     expect(fill.type).toBe(IRPaintType.LinearGradient);
-    expect(fill.gradientStops).toBeDefined();
-    expect(fill.gradientStops).toHaveLength(2);
-    expect(fill.gradientStops[0][0]).toBe(0);
-    expect(fill.gradientStops[0][1]).toBe(1);
-    expect(fill.gradientStops[1][0]).toBe(1);
-    expect(fill.gradientStart).toEqual([0, 0]);
-    expect(fill.gradientEnd).toEqual([100, 0]);
+    expect(expectStaticValue(fill.gradientStops)).toBeDefined();
+    expect(expectStaticValue(fill.gradientStops)).toHaveLength(2);
+    expect(expectStaticValue(fill.gradientStops)[0][0]).toBe(0);
+    expect(expectStaticValue(fill.gradientStops)[0][1]).toBe(1);
+    expect(expectStaticValue(fill.gradientStops)[1][0]).toBe(1);
+    expect(expectStaticValue(fill.gradientStart)).toEqual([0, 0]);
+    expect(expectStaticValue(fill.gradientEnd)).toEqual([100, 0]);
   });
 
   it('parses radial gradient fill', () => {
@@ -65,9 +67,9 @@ describe('convertLottieShapes style and edge cases', () => {
     const fill = result[0].fills[0] as IRGradientPaint;
 
     expect(fill.type).toBe(IRPaintType.RadialGradient);
-    expect(fill.gradientStops).toHaveLength(2);
-    expect(fill.gradientStart).toEqual([50, 50]);
-    expect(fill.gradientEnd).toEqual([150, 50]);
+    expect(expectStaticValue(fill.gradientStops)).toHaveLength(2);
+    expect(expectStaticValue(fill.gradientStart)).toEqual([50, 50]);
+    expect(expectStaticValue(fill.gradientEnd)).toEqual([150, 50]);
   });
 
   it('parses gradient with alpha stops', () => {
@@ -91,7 +93,7 @@ describe('convertLottieShapes style and edge cases', () => {
     ] as unknown as LottieShapeElement[];
 
     const { shapes: result } = convertLottieShapes(shapes);
-    const stops = (result[0].fills[0] as IRGradientPaint).gradientStops;
+    const stops = expectStaticValue((result[0].fills[0] as IRGradientPaint).gradientStops);
 
     expect(stops[0][4]).toBe(0.5);
     expect(stops[1][4]).toBe(1.0);
@@ -126,8 +128,8 @@ describe('convertLottieShapes style and edge cases', () => {
 
     expect(result[0].strokes).toHaveLength(1);
     expect(paint.type).toBe(IRPaintType.LinearGradient);
-    expect(paint.gradientStops).toHaveLength(2);
-    expect(stroke.width).toBe(4);
+    expect(expectStaticValue(paint.gradientStops)).toHaveLength(2);
+    expect(expectStaticValue(stroke.width)).toBe(4);
   });
 
   it('passes top-level fill into gr group that has no fill', () => {
@@ -143,7 +145,7 @@ describe('convertLottieShapes style and edge cases', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0].fills).toHaveLength(1);
-    expect((result[0].fills[0] as IRSolidPaint).color[0]).toBe(0.5);
+    expect(expectStaticValue((result[0].fills[0] as IRSolidPaint).color)[0]).toBe(0.5);
   });
 
   it('passes top-level stroke into gr group that has no stroke', () => {
@@ -158,8 +160,8 @@ describe('convertLottieShapes style and edge cases', () => {
     const { shapes: result } = convertLottieShapes(shapes);
 
     expect(result[0].strokes).toHaveLength(1);
-    expect((result[0].strokes[0].paint as IRSolidPaint).color[1]).toBe(1);
-    expect(result[0].strokes[0].width).toBe(5);
+    expect(expectStaticValue((result[0].strokes[0].paint as IRSolidPaint).color)[1]).toBe(1);
+    expect(expectStaticValue(result[0].strokes[0].width)).toBe(5);
   });
 
   it('does not override gr-level fill with top-level fill', () => {
@@ -174,7 +176,7 @@ describe('convertLottieShapes style and edge cases', () => {
     const { shapes: result } = convertLottieShapes(shapes);
 
     expect(result[0].fills).toHaveLength(1);
-    expect((result[0].fills[0] as IRSolidPaint).color[0]).toBe(0.9);
+    expect(expectStaticValue((result[0].fills[0] as IRSolidPaint).color)[0]).toBe(0.9);
   });
 
   it('passes top-level gradient fill into gr', () => {
@@ -239,12 +241,12 @@ describe('convertLottieShapes style and edge cases', () => {
     const { shapes: result } = convertLottieShapes(shapes);
     const topShape = result[1];
 
-    expect(result.map(shape => shape.position)).toEqual([[20, 0], [10, 0]]);
-    expect(topShape.fills.map(fill => (fill as IRSolidPaint).color)).toEqual([
+    expect(result.map(shape => expectStaticValue(shape.position))).toEqual([[20, 0], [10, 0]]);
+    expect(topShape.fills.map(fill => expectStaticValue((fill as IRSolidPaint).color))).toEqual([
       [0, 0, 1, 1],
       [1, 0, 0, 1],
     ]);
-    expect(topShape.strokes.map(stroke => stroke.width)).toEqual([4, 2]);
+    expect(topShape.strokes.map(stroke => expectStaticValue(stroke.width))).toEqual([4, 2]);
   });
 
   it('parses nested gr group recursively', () => {
@@ -266,9 +268,9 @@ describe('convertLottieShapes style and edge cases', () => {
     expect(result).toHaveLength(1);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Ellipse);
 
-    expect(shape.xRadius).toBe(30);
-    expect(shape.yRadius).toBe(30);
-    expect((shape.fills[0] as IRSolidPaint).color[2]).toBe(1);
+    expect(expectStaticValue(shape.xRadius)).toBe(30);
+    expect(expectStaticValue(shape.yRadius)).toBe(30);
+    expect(expectStaticValue((shape.fills[0] as IRSolidPaint).color)[2]).toBe(1);
   });
 
   it('parses ungrouped shapes without gr wrapper', () => {
@@ -282,8 +284,8 @@ describe('convertLottieShapes style and edge cases', () => {
     expect(result).toHaveLength(1);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Ellipse);
 
-    expect(shape.xRadius).toBe(60);
-    expect(shape.yRadius).toBe(40);
+    expect(expectStaticValue(shape.xRadius)).toBe(60);
+    expect(expectStaticValue(shape.yRadius)).toBe(40);
   });
 
   it('parses ungrouped rectangle with stroke', () => {
@@ -297,7 +299,7 @@ describe('convertLottieShapes style and edge cases', () => {
     expect(result).toHaveLength(1);
     expect(result[0].primitiveType).toBe(IRShapePrimitiveType.Rectangle);
     expect(result[0].strokes).toHaveLength(1);
-    expect(result[0].strokes[0].width).toBe(2);
+    expect(expectStaticValue(result[0].strokes[0].width)).toBe(2);
   });
 
   it('parses ungrouped gradient fill without gr', () => {
@@ -426,8 +428,8 @@ describe('convertLottieShapes style and edge cases', () => {
 
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Ellipse);
 
-    expect(shape.xRadius).toBe(100);
-    expect(shape.yRadius).toBe(25);
+    expect(expectStaticValue(shape.xRadius)).toBe(100);
+    expect(expectStaticValue(shape.yRadius)).toBe(25);
   });
 
   it('applies transform scale to rectangle dimensions', () => {
@@ -446,8 +448,8 @@ describe('convertLottieShapes style and edge cases', () => {
 
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Rectangle);
 
-    expect(shape.width).toBe(200);
-    expect(shape.height).toBe(150);
+    expect(expectStaticValue(shape.width)).toBe(200);
+    expect(expectStaticValue(shape.height)).toBe(150);
   });
 
   it('applies transform position offset', () => {
@@ -464,7 +466,7 @@ describe('convertLottieShapes style and edge cases', () => {
 
     const { shapes: result } = convertLottieShapes(shapes);
 
-    expect(result[0].position).toEqual([40, 60]);
+    expect(expectStaticValue(result[0].position)).toEqual([40, 60]);
   });
 
   it('applies transform scale to star radius', () => {
@@ -483,8 +485,8 @@ describe('convertLottieShapes style and edge cases', () => {
 
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Star);
 
-    expect(shape.outerRadius).toBe(100);
-    expect(shape.innerRadius).toBe(40);
+    expect(expectStaticValue(shape.outerRadius)).toBe(100);
+    expect(expectStaticValue(shape.innerRadius)).toBe(40);
   });
 
   it('applies transform scale to gradient coordinates', () => {
@@ -509,8 +511,8 @@ describe('convertLottieShapes style and edge cases', () => {
     const { shapes: result } = convertLottieShapes(shapes);
     const fill = result[0].fills[0] as IRGradientPaint;
 
-    expect(fill.gradientStart).toEqual([20, 10]);
-    expect(fill.gradientEnd).toEqual([180, 40]);
+    expect(expectStaticValue(fill.gradientStart)).toEqual([20, 10]);
+    expect(expectStaticValue(fill.gradientEnd)).toEqual([180, 40]);
   });
 
   it('filters out shapes without fills or strokes', () => {
@@ -546,7 +548,7 @@ describe('convertLottieShapes style and edge cases', () => {
 
     const { shapes: result } = convertLottieShapes(shapes);
 
-    expect((result[0].fills[0] as IRSolidPaint).color[3]).toBe(0.5);
+    expect(expectStaticValue((result[0].fills[0] as IRSolidPaint).color)[3]).toBe(0.5);
   });
 
   it('handles both fill and stroke on same shape', () => {
@@ -566,8 +568,8 @@ describe('convertLottieShapes style and edge cases', () => {
 
     expect(result[0].fills).toHaveLength(1);
     expect(result[0].strokes).toHaveLength(1);
-    expect((result[0].fills[0] as IRSolidPaint).color[0]).toBe(1);
-    expect((result[0].strokes[0].paint as IRSolidPaint).color[2]).toBe(1);
+    expect(expectStaticValue((result[0].fills[0] as IRSolidPaint).color)[0]).toBe(1);
+    expect(expectStaticValue((result[0].strokes[0].paint as IRSolidPaint).color)[2]).toBe(1);
   });
 
   it('maps lineCap and lineJoin values correctly', () => {

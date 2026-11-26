@@ -3,7 +3,9 @@ import { IRLineCap, IRLineJoin, IRShapePrimitiveType } from '@galacean/animation
 import type { IRSolidPaint } from '@galacean/animation-ir';
 import type { LottieShapeElement } from '../../../src/common/conversion-types';
 import { convertLottieShapes } from '../../../src/converter/convert-lottie-shapes';
-import { expectShapePrimitive, minimalTransform, solidFill, solidStroke } from '../../helpers/shape-test-helpers';
+import {
+  expectShapePrimitive, expectStaticValue, minimalTransform, solidFill, solidStroke,
+} from '../../helpers/shape-test-helpers';
 
 describe('convertLottieShapes', () => {
   it('parses ellipse shape', () => {
@@ -19,10 +21,10 @@ describe('convertLottieShapes', () => {
     expect(result).toHaveLength(1);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Ellipse);
 
-    expect(shape.xRadius).toBe(50);
-    expect(shape.yRadius).toBe(40);
+    expect(expectStaticValue(shape.xRadius)).toBe(50);
+    expect(expectStaticValue(shape.yRadius)).toBe(40);
     expect(shape.fills).toHaveLength(1);
-    expect((shape.fills[0] as IRSolidPaint).color[0]).toBe(1);
+    expect(expectStaticValue((shape.fills[0] as IRSolidPaint).color)[0]).toBe(1);
   });
 
   it('parses rectangle shape', () => {
@@ -42,9 +44,9 @@ describe('convertLottieShapes', () => {
     expect(result).toHaveLength(1);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Rectangle);
 
-    expect(shape.width).toBe(200);
-    expect(shape.height).toBe(100);
-    expect(shape.cornerRadius).toBe(10);
+    expect(expectStaticValue(shape.width)).toBe(200);
+    expect(expectStaticValue(shape.height)).toBe(100);
+    expect(expectStaticValue(shape.cornerRadius)).toBe(10);
   });
 
   it('clamps Rectangle corner radius to half of its shorter edge', () => {
@@ -58,7 +60,7 @@ describe('convertLottieShapes', () => {
     }] as unknown as LottieShapeElement[]);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Rectangle);
 
-    expect(shape.cornerRadius).toBe(20);
+    expect(expectStaticValue(shape.cornerRadius)).toBe(20);
   });
 
   it('parses stroke properties', () => {
@@ -78,8 +80,8 @@ describe('convertLottieShapes', () => {
     expect(result[0].strokes).toHaveLength(1);
     const stroke = result[0].strokes[0];
 
-    expect((stroke.paint as IRSolidPaint).color[1]).toBe(1);
-    expect(stroke).toMatchObject({ width: 3, cap: IRLineCap.Round, join: IRLineJoin.Round });
+    expect(expectStaticValue((stroke.paint as IRSolidPaint).color)[1]).toBe(1);
+    expect(stroke).toMatchObject({ width: { type: 'static', value: 3 }, cap: IRLineCap.Round, join: IRLineJoin.Round });
   });
 
   it('keeps independent geometry while normalizing multiple strokes to bottom-first order', () => {
@@ -94,10 +96,10 @@ describe('convertLottieShapes', () => {
     }] as unknown as LottieShapeElement[]);
     const [bottom, top] = result[0].strokes;
 
-    expect((bottom.paint as IRSolidPaint).color).toEqual([0, 0, 1, 1]);
-    expect(bottom).toMatchObject({ width: 6, cap: IRLineCap.Square, join: IRLineJoin.Bevel });
-    expect((top.paint as IRSolidPaint).color).toEqual([1, 0, 0, 1]);
-    expect(top).toMatchObject({ width: 2, cap: IRLineCap.Butt, join: IRLineJoin.Miter });
+    expect(expectStaticValue((bottom.paint as IRSolidPaint).color)).toEqual([0, 0, 1, 1]);
+    expect(bottom).toMatchObject({ width: { type: 'static', value: 6 }, cap: IRLineCap.Square, join: IRLineJoin.Bevel });
+    expect(expectStaticValue((top.paint as IRSolidPaint).color)).toEqual([1, 0, 0, 1]);
+    expect(top).toMatchObject({ width: { type: 'static', value: 2 }, cap: IRLineCap.Butt, join: IRLineJoin.Miter });
   });
 
   it('keeps group geometry order behavior stable', () => {
@@ -195,10 +197,10 @@ describe('convertLottieShapes', () => {
     const shapeA = expectShapePrimitive(resultA[0], IRShapePrimitiveType.Rectangle);
     const shapeB = expectShapePrimitive(resultB[0], IRShapePrimitiveType.Rectangle);
 
-    expect(shapeA.width).toBe(120);
-    expect(shapeB.width).toBe(120);
-    expect(shapeA.cornerRadius).toBe(12);
-    expect(shapeB.cornerRadius).toBe(12);
+    expect(expectStaticValue(shapeA.width)).toBe(120);
+    expect(expectStaticValue(shapeB.width)).toBe(120);
+    expect(expectStaticValue(shapeA.cornerRadius)).toBe(12);
+    expect(expectStaticValue(shapeB.cornerRadius)).toBe(12);
   });
 
   it('does not project trim-path into normalized shape data', () => {
@@ -327,10 +329,10 @@ describe('convertLottieShapes', () => {
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Star);
 
     expect(shape.pointCount).toBe(5);
-    expect(shape.outerRadius).toBe(80);
-    expect(shape.innerRadius).toBe(30);
-    expect(shape.outerRoundness).toBe(0);
-    expect(shape.innerRoundness).toBe(0);
+    expect(expectStaticValue(shape.outerRadius)).toBe(80);
+    expect(expectStaticValue(shape.innerRadius)).toBe(30);
+    expect(expectStaticValue(shape.outerRoundness)).toBe(0);
+    expect(expectStaticValue(shape.innerRoundness)).toBe(0);
     expect(shape.fills).toHaveLength(1);
   });
 
@@ -358,9 +360,9 @@ describe('convertLottieShapes', () => {
 
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Star);
 
-    expect(shape.outerRoundness).toBe(15);
-    expect(shape.innerRoundness).toBe(10);
-    expect(shape.position).toEqual([10, 20]);
+    expect(expectStaticValue(shape.outerRoundness)).toBe(15);
+    expect(expectStaticValue(shape.innerRoundness)).toBe(10);
+    expect(expectStaticValue(shape.position)).toEqual([10, 20]);
   });
 
   it('parses polygon shape when innerRadius is zero', () => {
@@ -389,8 +391,8 @@ describe('convertLottieShapes', () => {
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Polygon);
 
     expect(shape.pointCount).toBe(6);
-    expect(shape.radius).toBe(60);
-    expect(shape.roundness).toBe(5);
+    expect(expectStaticValue(shape.radius)).toBe(60);
+    expect(expectStaticValue(shape.roundness)).toBe(5);
   });
 
   it('parses polygon when ir property is missing', () => {
@@ -407,7 +409,7 @@ describe('convertLottieShapes', () => {
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Polygon);
 
     expect(shape.pointCount).toBe(3);
-    expect(shape.radius).toBe(40);
+    expect(expectStaticValue(shape.radius)).toBe(40);
   });
 
   it('parses custom path shape (sh)', () => {
@@ -452,9 +454,9 @@ describe('convertLottieShapes', () => {
     expect(result).toHaveLength(1);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Custom);
 
-    expect(shape.customPaths).toHaveLength(1);
+    expect(expectStaticValue(shape.customPaths)).toHaveLength(1);
 
-    const path = shape.customPaths[0];
+    const path = expectStaticValue(shape.customPaths)[0];
 
     expect(path.points).toHaveLength(4);
     expect(path.points[0]).toEqual({ x: 0, y: 0 });
@@ -526,9 +528,9 @@ describe('convertLottieShapes', () => {
     expect(result).toHaveLength(1);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Custom);
 
-    expect(shape.customPaths).toHaveLength(2);
-    expect(shape.customPaths[0].closed).toBe(true);
-    expect(shape.customPaths[1].closed).toBe(false);
+    expect(expectStaticValue(shape.customPaths)).toHaveLength(2);
+    expect(expectStaticValue(shape.customPaths)[0].closed).toBe(true);
+    expect(expectStaticValue(shape.customPaths)[1].closed).toBe(false);
   });
 
   it('preserves curved path tangents in custom shape', () => {
@@ -570,7 +572,7 @@ describe('convertLottieShapes', () => {
 
     const { shapes: result } = convertLottieShapes(shapes);
     const shape = expectShapePrimitive(result[0], IRShapePrimitiveType.Custom);
-    const path = shape.customPaths[0];
+    const path = expectStaticValue(shape.customPaths)[0];
 
     expect(path.inTangents[0]).toEqual({ x: 0, y: 27.6 });
     expect(path.outTangents[0]).toEqual({ x: 0, y: -27.6 });

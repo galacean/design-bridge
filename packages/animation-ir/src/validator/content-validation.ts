@@ -2,6 +2,7 @@ import { IRMaskMode } from '../schema/layer.js';
 import { IRPaintType, IRLineCap, IRLineJoin, IRShapePrimitiveType, IRTextureScaleMode } from '../schema/shape.js';
 import type { IRValidationErrorCode } from './contract.js';
 import type { ValidationContext } from './context.js';
+import { validateAnimatedProperty } from './property-validation.js';
 import {
   isFiniteNumber, isIRId, isNormalizedNumber, isNumberTuple, isOneOfConst,
   isRecord, validateColor,
@@ -34,6 +35,96 @@ export function validateTextData(ctx: ValidationContext, value: unknown, path: s
 
   if (!isFiniteNumber(value['lineHeight']) || value['lineHeight'] <= 0) {
     ctx.error('IR_TEXT_DATA_INVALID', `${path}.lineHeight`, 'must be greater than 0', layerId);
+  }
+  const sizeMode = value['sizeMode'];
+  const wrap = value['wrap'];
+  const overflow = value['overflow'];
+  const verticalAlign = value['verticalAlign'];
+
+  if (sizeMode !== undefined && sizeMode !== 'fixed' && sizeMode !== 'auto-width' && sizeMode !== 'auto-height') {
+    ctx.error('IR_TEXT_DATA_INVALID', `${path}.sizeMode`, 'must be fixed, auto-width, or auto-height', layerId);
+  }
+  if (wrap !== undefined && typeof wrap !== 'boolean') {
+    ctx.error('IR_TEXT_DATA_INVALID', `${path}.wrap`, 'must be boolean', layerId);
+  } else if (wrap === true && (sizeMode === undefined || sizeMode === 'auto-width')) {
+    ctx.error('IR_TEXT_DATA_INVALID', `${path}.wrap`, 'requires fixed or auto-height sizeMode', layerId);
+  }
+  if (overflow !== undefined && overflow !== 'visible' && overflow !== 'clip' && overflow !== 'shrink') {
+    ctx.error('IR_TEXT_DATA_INVALID', `${path}.overflow`, 'must be visible, clip, or shrink', layerId);
+  }
+  if (verticalAlign !== undefined && verticalAlign !== 'top' && verticalAlign !== 'center' && verticalAlign !== 'bottom') {
+    ctx.error('IR_TEXT_DATA_INVALID', `${path}.verticalAlign`, 'must be top, center, or bottom', layerId);
+  }
+  validateTextStyleRanges(ctx, value['styleRanges'], value['text'], `${path}.styleRanges`, layerId);
+}
+
+function splitsSurrogatePair(text: string, offset: number): boolean {
+  const previous = text.charCodeAt(offset - 1);
+  const current = text.charCodeAt(offset);
+
+  return previous >= 0xD800 && previous <= 0xDBFF && current >= 0xDC00 && current <= 0xDFFF;
+}
+
+function validateTextStyleRanges(
+  ctx: ValidationContext,
+  value: unknown,
+  text: unknown,
+  path: string,
+  layerId: string | undefined,
+): void {
+  if (value === undefined) {
+    return;
+  }
+  if (!Array.isArray(value)) {
+    ctx.error('IR_TEXT_DATA_INVALID', path, 'must be an array', layerId);
+
+    return;
+  }
+  let previousEnd = 0;
+
+  for (const [index, range] of value.entries()) {
+    const rangePath = `${path}[${index}]`;
+
+    if (!isRecord(range)) {
+      ctx.error('IR_TEXT_DATA_INVALID', rangePath, 'must be an object', layerId);
+      continue;
+    }
+    const start = range['start'];
+    const end = range['end'];
+
+    if (
+      !isFiniteNumber(start) || !Number.isInteger(start) || start < 0 ||
+      !isFiniteNumber(end) || !Number.isInteger(end) || end <= start
+    ) {
+      ctx.error('IR_TEXT_DATA_INVALID', rangePath, 'must define a non-empty integer range [start, end)', layerId);
+    } else {
+      if (start < previousEnd) {
+        ctx.error('IR_TEXT_DATA_INVALID', `${rangePath}.start`, 'ranges must be sorted and non-overlapping', layerId);
+      }
+      if (typeof text === 'string') {
+        if (end > text.length) {
+          ctx.error('IR_TEXT_DATA_INVALID', `${rangePath}.end`, 'must not exceed the text length', layerId);
+        }
+        for (const [field, offset] of [['start', start], ['end', end]] as const) {
+          if (splitsSurrogatePair(text, offset)) {
+            ctx.error('IR_TEXT_DATA_INVALID', `${rangePath}.${field}`, 'must not split a UTF-16 surrogate pair', layerId);
+          }
+        }
+      }
+      previousEnd = Math.max(previousEnd, end);
+    }
+    if (range['fontAssetId'] !== undefined && !isIRId(range['fontAssetId'])) {
+      ctx.error('IR_TEXT_DATA_INVALID', `${rangePath}.fontAssetId`, 'must be a valid Asset ID', layerId);
+    }
+    if (range['fontSize'] !== undefined && (!isFiniteNumber(range['fontSize']) || range['fontSize'] <= 0)) {
+      ctx.error('IR_TEXT_DATA_INVALID', `${rangePath}.fontSize`, 'must be greater than 0', layerId);
+    }
+    if (range['letterSpacing'] !== undefined && !isFiniteNumber(range['letterSpacing'])) {
+      ctx.error('IR_TEXT_DATA_INVALID', `${rangePath}.letterSpacing`, 'must be finite', layerId);
+    }
+    if (range['color'] !== undefined) {
+      validateColor(ctx, range['color'], 'IR_TEXT_COLOR_INVALID', `${rangePath}.color`, layerId);
+    }
   }
 }
 
@@ -110,48 +201,35 @@ function validateShapePaint(ctx: ValidationContext, value: unknown, path: string
 
     return;
   }
+  validateAnimatedProperty(ctx, value['opacity'], 'number', `${path}.opacity`, layerId, { normalized: true });
 
   switch (value['type']) {
     case IRPaintType.Solid:
-      validateColor(ctx, value['color'], 'IR_SHAPE_PAINT_INVALID', `${path}.color`, layerId);
+      if (value['color'] == null) {
+        ctx.error('IR_SHAPE_PAINT_INVALID', `${path}.color`, 'must be an animated RGBA property', layerId);
+      } else {
+        validateAnimatedProperty(ctx, value['color'], 4, `${path}.color`, layerId, { normalized: true });
+      }
 
       break;
     case IRPaintType.LinearGradient:
     case IRPaintType.RadialGradient:
     case IRPaintType.AngularGradient: {
-      const stops = value['gradientStops'];
-
-      if (!Array.isArray(stops) || stops.length === 0) {
-        ctx.error('IR_SHAPE_PAINT_INVALID', `${path}.gradientStops`, 'must be a non-empty array', layerId);
-      } else {
-        let previousPosition = Number.NEGATIVE_INFINITY;
-
-        for (const [index, stop] of stops.entries()) {
-          const stopPath = `${path}.gradientStops[${index}]`;
-
-          if (!isNumberTuple(stop, 5)) {
-            ctx.error('IR_SHAPE_PAINT_INVALID', stopPath, 'must be [position, r, g, b, a]', layerId);
-            continue;
-          }
-          if (!stop.every(isNormalizedNumber)) {
-            ctx.error('IR_SHAPE_PAINT_INVALID', stopPath, 'must contain values in the 0..1 range', layerId);
-          }
-          if (stop[0] < previousPosition) {
-            ctx.error(
-              'IR_SHAPE_PAINT_INVALID',
-              `${stopPath}[0]`,
-              'positions must be sorted in ascending order',
-              layerId,
-            );
-          }
-          previousPosition = stop[0];
-        }
-      }
-      if (!isNumberTuple(value['gradientStart'], 2)) {
-        ctx.error('IR_SHAPE_PAINT_INVALID', `${path}.gradientStart`, 'is required as a finite 2D tuple', layerId);
-      }
-      if (!isNumberTuple(value['gradientEnd'], 2)) {
-        ctx.error('IR_SHAPE_PAINT_INVALID', `${path}.gradientEnd`, 'is required as a finite 2D tuple', layerId);
+      validateAnimatedProperty(
+        ctx, value['gradientStops'],
+        (stops, stopsPath) => validateGradientStops(ctx, stops, stopsPath, layerId),
+        `${path}.gradientStops`, layerId,
+        {
+          required: true,
+          validateSegment(start, end, segmentPath) {
+            if (Array.isArray(start) && Array.isArray(end) && start.length !== end.length) {
+              ctx.error('IR_SHAPE_PAINT_INVALID', segmentPath, 'interpolated stops must have equal counts', layerId);
+            }
+          },
+        },
+      );
+      for (const field of ['gradientStart', 'gradientEnd']) {
+        validateAnimatedProperty(ctx, value[field], 2, `${path}.${field}`, layerId, { required: true });
       }
 
       break;
@@ -168,6 +246,31 @@ function validateShapePaint(ctx: ValidationContext, value: unknown, path: string
   }
 }
 
+function validateGradientStops(ctx: ValidationContext, value: unknown, path: string, layerId?: string): void {
+  if (!Array.isArray(value) || value.length === 0) {
+    ctx.error('IR_SHAPE_PAINT_INVALID', path, 'must be a non-empty array', layerId);
+
+    return;
+  }
+  let previousPosition = Number.NEGATIVE_INFINITY;
+
+  for (const [index, stop] of value.entries()) {
+    const stopPath = `${path}[${index}]`;
+
+    if (!isNumberTuple(stop, 5)) {
+      ctx.error('IR_SHAPE_PAINT_INVALID', stopPath, 'must be [position, r, g, b, a]', layerId);
+      continue;
+    }
+    if (!stop.every(isNormalizedNumber)) {
+      ctx.error('IR_SHAPE_PAINT_INVALID', stopPath, 'must contain values in the 0..1 range', layerId);
+    }
+    if (stop[0] < previousPosition) {
+      ctx.error('IR_SHAPE_PAINT_INVALID', `${stopPath}[0]`, 'positions must be sorted in ascending order', layerId);
+    }
+    previousPosition = stop[0];
+  }
+}
+
 function validateShapeStroke(ctx: ValidationContext, value: unknown, path: string, layerId: string | undefined): void {
   if (!isRecord(value)) {
     ctx.error('IR_SHAPE_DATA_INVALID', path, 'must be an object', layerId);
@@ -176,9 +279,7 @@ function validateShapeStroke(ctx: ValidationContext, value: unknown, path: strin
   }
 
   validateShapePaint(ctx, value['paint'], `${path}.paint`, layerId);
-  if (!isFiniteNumber(value['width']) || value['width'] < 0) {
-    ctx.error('IR_SHAPE_DATA_INVALID', `${path}.width`, 'must be a finite non-negative number', layerId);
-  }
+  validateRequiredNonNegativeShapeNumber(ctx, value, 'width', path, layerId);
   if (!isOneOfConst(value['cap'], IRLineCap)) {
     ctx.error('IR_SHAPE_DATA_INVALID', `${path}.cap`, 'is invalid', layerId);
   }
@@ -194,25 +295,35 @@ function validateRequiredNonNegativeShapeNumber(
   path: string,
   layerId: string | undefined,
 ): void {
-  if (!isFiniteNumber(value[field]) || value[field] < 0) {
-    ctx.error('IR_SHAPE_DATA_INVALID', `${path}.${field}`, 'must be a finite non-negative number', layerId);
+  if (value[field] === undefined) {
+    ctx.error('IR_SHAPE_DATA_INVALID', `${path}.${field}`, 'is required', layerId);
+
+    return;
   }
+  validateShapeNumber(ctx, value[field], `${path}.${field}`, layerId);
+}
+
+function validateShapeNumber(
+  ctx: ValidationContext,
+  value: unknown,
+  path: string,
+  layerId: string | undefined,
+  maximum = Number.POSITIVE_INFINITY,
+): void {
+  validateAnimatedProperty(ctx, value, (sample, samplePath) => {
+    if (!isFiniteNumber(sample) || sample < 0 || sample > maximum) {
+      const message = Number.isFinite(maximum)
+        ? `must be finite and in the 0..${maximum} range`
+        : 'must be a finite non-negative number';
+
+      ctx.error('IR_SHAPE_DATA_INVALID', samplePath, message, layerId);
+    }
+  }, path, layerId);
 }
 
 function validateShapePointCount(ctx: ValidationContext, value: unknown, path: string, layerId: string | undefined): void {
   if (!isFiniteNumber(value) || !Number.isInteger(value) || value < 2) {
     ctx.error('IR_SHAPE_DATA_INVALID', path, 'must be an integer greater than or equal to 2', layerId);
-  }
-}
-
-function validateOptionalShapeRoundness(
-  ctx: ValidationContext,
-  value: unknown,
-  path: string,
-  layerId: string | undefined,
-): void {
-  if (value !== undefined && (!isFiniteNumber(value) || value < 0 || value > 100)) {
-    ctx.error('IR_SHAPE_DATA_INVALID', path, 'must be in the 0..100 range', layerId);
   }
 }
 
@@ -224,19 +335,19 @@ function validateOptionalRectangleCornerRadius(
 ): void {
   const cornerRadius = value['cornerRadius'];
 
-  if (cornerRadius === undefined) {
-    return;
-  }
-  if (!isFiniteNumber(cornerRadius) || cornerRadius < 0) {
-    ctx.error('IR_SHAPE_DATA_INVALID', `${path}.cornerRadius`, 'must be a finite non-negative number', layerId);
-
-    return;
-  }
+  validateShapeNumber(ctx, cornerRadius, `${path}.cornerRadius`, layerId);
   const width = value['width'];
   const height = value['height'];
 
-  if (isFiniteNumber(width) && isFiniteNumber(height) && cornerRadius > Math.min(width, height) / 2) {
-    ctx.error('IR_SHAPE_DATA_INVALID', `${path}.cornerRadius`, 'must not exceed half of the shorter edge', layerId);
+  if (
+    isRecord(cornerRadius) && cornerRadius['type'] === 'static' && isFiniteNumber(cornerRadius['value']) &&
+    isRecord(width) && width['type'] === 'static' && isFiniteNumber(width['value']) &&
+    isRecord(height) && height['type'] === 'static' && isFiniteNumber(height['value']) &&
+    cornerRadius['value'] > Math.min(width['value'], height['value']) / 2
+  ) {
+    ctx.error(
+      'IR_SHAPE_DATA_INVALID', `${path}.cornerRadius.value`, 'must not exceed half of the shorter edge', layerId,
+    );
   }
 }
 
@@ -252,6 +363,42 @@ function validateCustomShapePaths(ctx: ValidationContext, value: unknown, path: 
   }
 }
 
+function validatePathTopology(
+  ctx: ValidationContext,
+  start: unknown,
+  end: unknown,
+  path: string,
+  layerId: string | undefined,
+): void {
+  if (!Array.isArray(start) || !Array.isArray(end)) {
+    return;
+  }
+  if (start.length !== end.length) {
+    ctx.error('IR_SHAPE_DATA_INVALID', path, 'interpolated compound paths must have equal path counts', layerId);
+
+    return;
+  }
+  for (const [index, source] of start.entries()) {
+    const target: unknown = end[index];
+
+    if (!isRecord(source) || !isRecord(target)) {
+      continue;
+    }
+    const sourcePoints = source['points'];
+    const targetPoints = target['points'];
+
+    if (
+      source['closed'] !== target['closed'] ||
+      (Array.isArray(sourcePoints) && Array.isArray(targetPoints) && sourcePoints.length !== targetPoints.length)
+    ) {
+      ctx.error(
+        'IR_SHAPE_DATA_INVALID', path,
+        `interpolated path ${index} must preserve its vertex count and closed flag`, layerId,
+      );
+    }
+  }
+}
+
 export function validateShapeData(ctx: ValidationContext, value: unknown, path: string, layerId: string | undefined): void {
   if (!isRecord(value)) {
     ctx.error('IR_SHAPE_DATA_INVALID', path, 'must be an object', layerId);
@@ -261,9 +408,7 @@ export function validateShapeData(ctx: ValidationContext, value: unknown, path: 
   if (!isOneOfConst(value['primitiveType'], IRShapePrimitiveType)) {
     ctx.error('IR_SHAPE_DATA_INVALID', `${path}.primitiveType`, 'is invalid', layerId);
   }
-  if (!isNumberTuple(value['position'], 2)) {
-    ctx.error('IR_SHAPE_DATA_INVALID', `${path}.position`, 'must be a finite 2D tuple', layerId);
-  }
+  validateAnimatedProperty(ctx, value['position'], 2, `${path}.position`, layerId, { required: true });
   const fills = value['fills'];
 
   if (!Array.isArray(fills)) {
@@ -285,7 +430,15 @@ export function validateShapeData(ctx: ValidationContext, value: unknown, path: 
 
   switch (value['primitiveType']) {
     case IRShapePrimitiveType.Custom:
-      validateCustomShapePaths(ctx, value['customPaths'], `${path}.customPaths`, layerId);
+      validateAnimatedProperty(
+        ctx, value['customPaths'],
+        (paths, pathsPath) => validateCustomShapePaths(ctx, paths, pathsPath, layerId),
+        `${path}.customPaths`, layerId,
+        {
+          required: true,
+          validateSegment: (start, end, segmentPath) => validatePathTopology(ctx, start, end, segmentPath, layerId),
+        },
+      );
 
       break;
     case IRShapePrimitiveType.Rectangle:
@@ -302,15 +455,15 @@ export function validateShapeData(ctx: ValidationContext, value: unknown, path: 
     case IRShapePrimitiveType.Polygon:
       validateShapePointCount(ctx, value['pointCount'], `${path}.pointCount`, layerId);
       validateRequiredNonNegativeShapeNumber(ctx, value, 'radius', path, layerId);
-      validateOptionalShapeRoundness(ctx, value['roundness'], `${path}.roundness`, layerId);
+      validateShapeNumber(ctx, value['roundness'], `${path}.roundness`, layerId, 100);
 
       break;
     case IRShapePrimitiveType.Star:
       validateShapePointCount(ctx, value['pointCount'], `${path}.pointCount`, layerId);
       validateRequiredNonNegativeShapeNumber(ctx, value, 'innerRadius', path, layerId);
       validateRequiredNonNegativeShapeNumber(ctx, value, 'outerRadius', path, layerId);
-      validateOptionalShapeRoundness(ctx, value['innerRoundness'], `${path}.innerRoundness`, layerId);
-      validateOptionalShapeRoundness(ctx, value['outerRoundness'], `${path}.outerRoundness`, layerId);
+      validateShapeNumber(ctx, value['innerRoundness'], `${path}.innerRoundness`, layerId, 100);
+      validateShapeNumber(ctx, value['outerRoundness'], `${path}.outerRoundness`, layerId, 100);
 
       break;
   }
@@ -337,7 +490,13 @@ export function validateMask(ctx: ValidationContext, value: unknown, path: strin
   }
 }
 
-export function validateLocalBounds(ctx: ValidationContext, value: unknown, path: string, layerId?: string): void {
+export function validateLocalBounds(
+  ctx: ValidationContext,
+  value: unknown,
+  path: string,
+  layerId?: string,
+  automaticDimensions: ReadonlyArray<'width' | 'height'> = [],
+): void {
   if (!isRecord(value)) {
     ctx.error('IR_LAYER_LOCAL_BOUNDS_INVALID', path, 'must be an object', layerId);
 
@@ -350,8 +509,11 @@ export function validateLocalBounds(ctx: ValidationContext, value: unknown, path
     }
   }
   for (const field of ['width', 'height'] as const) {
-    if (!isFiniteNumber(value[field]) || value[field] <= 0) {
-      ctx.error('IR_LAYER_LOCAL_BOUNDS_INVALID', `${path}.${field}`, 'must be finite and greater than 0', layerId);
+    const automatic = automaticDimensions.includes(field);
+
+    if (!isFiniteNumber(value[field]) || (automatic ? value[field] < 0 : value[field] <= 0)) {
+      ctx.error('IR_LAYER_LOCAL_BOUNDS_INVALID', `${path}.${field}`,
+        automatic ? 'must be finite and non-negative' : 'must be finite and greater than 0', layerId);
     }
   }
 }

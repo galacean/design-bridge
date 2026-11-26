@@ -38,7 +38,7 @@ function normalizeTime(frameTime: number, startFrame: number, endFrame: number):
   return (frameTime - startFrame) / frames;
 }
 
-function getScalarValue(keyframe: IRKeyframe, dimensionIndex?: number): number {
+function getScalarValue(keyframe: IRKeyframe<number | IRVec3>, dimensionIndex?: number): number {
   const value = keyframe.value;
 
   if (typeof value === 'number') {
@@ -248,7 +248,7 @@ function serializeBezierSegments(segments: number[][]): BezierKeyframeValue[] | 
 }
 
 function buildCurveForDimension(
-  keyframes: IRKeyframe[],
+  keyframes: IRKeyframe<number | IRVec3>[],
   timeContext: IRToGETimeContext,
   dimensionIndex: number | undefined,
 ): BezierKeyframeValue[] | undefined {

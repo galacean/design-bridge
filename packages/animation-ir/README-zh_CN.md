@@ -82,7 +82,7 @@ assertIRScene(scene);
 | --- | --- | --- |
 | `solid` | `content.color` 指定 RGBA，各通道取 `0..1` | 必填，定义矩形范围 |
 | `image` | `content.assetId` 引用图片资源 | 必填，定义显示尺寸 |
-| `text` | 文本、`fontAssetId`、颜色、字号、字距、行高、对齐方式 | 可选，定义文本边界 |
+| `text` | 文本、字体、样式及文本块布局 | 固定宽高或自动高度模式必需；其他模式可选 |
 | `shape` | `content.shapes` 保存矢量图形、填充和描边 | 可选 |
 | `particle` | `content` 保存粒子数量上限、寿命和发射参数 | 必填，定义编辑区域 |
 | `precomp` | `content.compositionId` 引用源合成，`clipToBounds` 控制画布裁剪 | 可选 |
@@ -98,6 +98,113 @@ assertIRScene(scene);
 - **轨道遮罩** `matte` 通过 `sourceLayerId` 取同一合成内另一图层的几何覆盖、Alpha 或亮度。来源图层仍按自身顺序和可见性绘制。
 
 同一图层可同时使用两种遮罩。最终透明度等于内容 Alpha、路径蒙版覆盖率、轨道遮罩覆盖率和图层 `opacity` 的乘积。
+
+### 富文本
+
+`IRTextStyleRange` 使用 `start`、`end` 表示非空的左闭右开范围 `[start, end)`，单位是 UTF-16 code unit，
+与 JavaScript 字符串索引一致。片段必须有序、不重叠、不超出 `text.length`，且边界不能拆开代理对。
+片段可以覆盖 `fontAssetId`、`fontSize`、`color`、`letterSpacing`；省略的样式和未覆盖的文字继承
+Text Content 的默认样式，不继承相邻片段。省略 `styleRanges` 或使用空数组时，全文采用默认样式。
+
+```ts
+import type { IRTextContent } from '@galacean/animation-ir';
+
+const content: IRTextContent = {
+  text: 'Hello world', fontAssetId: 'font:body', fontSize: 16,
+  color: [0, 0, 0, 1], letterSpacing: 0, lineHeight: 20, textAlign: 'left',
+  styleRanges: [{ start: 6, end: 11, fontAssetId: 'font:emphasis', color: [1, 0, 0, 1] }],
+};
+```
+
+两个字体 ID 都必须引用 Font Asset，字族、字重和斜体信息由该资源提供。显式换行保存在 `text` 的 `\n`
+中；行高和对齐作用于整个文本块。文字和片段样式保持静态。逐字定位、沿路径排版和来源专属 markup
+不属于此契约。
+
+### 文本布局
+
+布局作用于整个 `IRTextContent`，不因是否包含 `styleRanges` 而改变。省略字段时采用以下 IR 默认值，
+消费方不能改用自身 Runtime 的默认值。
+
+| 字段 | 可选值 | 默认值 |
+| --- | --- | --- |
+| `sizeMode` | `fixed`、`auto-width`、`auto-height` | `auto-width` |
+| `wrap` | `true` 按约束宽度自动折行；`false` 仅按显式 `\n` 换行 | `false` |
+| `overflow` | `visible`、`clip`、`shrink` | `visible` |
+| `verticalAlign` | `top`、`center`、`bottom` | `top` |
+
+`localBounds.x/y` 是排版框在图层局部像素坐标中的原点；省略边界时原点为 `(0, 0)`。
+它表示排版框，不是可见字形轮廓的包围盒。宽高分别按尺寸模式解释：
+
+| 尺寸模式 | `localBounds` 提供的约束 | 由文字排版计算的尺寸 |
+| --- | --- | --- |
+| `fixed` | 必须提供边界，`width`、`height` 均大于零 | 无；溢出不会改变框的尺寸 |
+| `auto-height` | 必须提供边界，`width` 大于零 | 分行后的高度 |
+| `auto-width` | 不约束宽高，边界可省略 | 按显式换行排版后的宽高 |
+
+自动尺寸轴上保存的宽高仅作为测量提示，消费方必须根据文字重新计算，不能用这些值限制换行、对齐、裁切
+或缩小适配。只要提供 `localBounds`，四个成员仍须齐全，宽高须为有限非负数；自动尺寸轴可用 `0`
+表示尚未测量。`wrap: true` 必须配合 `fixed` 或 `auto-height`。自动尺寸变化时保持框原点和
+Transform 中以局部像素表示的 anchor 不变，不能隐式将它们移到新的中心。
+
+先求解分行和自动尺寸，再处理溢出。`visible` 允许内容显示在框外；`clip` 裁切到求解后的排版框；
+`shrink` 将排版后的文本块等比缩小，使宽高适配排版框，字号、字间距和行高随之缩放，既不放大，
+也不在缩放后重新折行。随后在排版框内应用水平 `textAlign` 和 `verticalAlign`，需要裁切时最后裁切。
+文本布局和样式区间保持静态，可以通过图层 Transform 对整体结果制作动画。
+
+```ts
+import type { IRTextLayer } from '@galacean/animation-ir';
+
+const label: IRTextLayer = {
+  id: 'label', type: 'text', visible: true, time: { inFrame: 0, outFrame: 60 },
+  localBounds: { x: 0, y: 0, width: 240, height: 80 },
+  content: {
+    text: '一段可以按文本框宽度换行的文字', fontAssetId: 'font:body', fontSize: 16,
+    color: [0, 0, 0, 1], letterSpacing: 0, lineHeight: 20, textAlign: 'left',
+    sizeMode: 'fixed', wrap: true, overflow: 'clip', verticalAlign: 'center',
+  },
+};
+```
+
+校验器检查字段、必需边界和约束尺寸，不写入默认值或测量文字。字体回退、字形度量、文字塑形及具体断行
+位置由消费方实现；契约确定排版策略，不保证不同引擎渲染出完全相同的像素。
+此前把测量边界直接作为固定文本框的适配器，需要显式填写 `sizeMode: 'fixed'` 以及换行、溢出、对齐策略。
+现有 GE/SVG 导出器尚未适配这些布局字段。
+
+### Shape
+
+Shape 列表、Fill 列表和 Stroke 列表都使用从底到顶的顺序。一个 Shape 会先绘制全部 Fill，再绘制全部
+Stroke。支持的图元包括 Custom、Rectangle、Ellipse、Polygon 和 Star；Paint 支持纯色、线性渐变、
+径向渐变、角向渐变和 Image Texture。
+
+以下字段统一使用 `IRAnimatedProperty<T>`；常量也写为 `{ type: 'static', value }`：
+
+| 字段 | 值类型与约束 |
+| --- | --- |
+| 纯色 Paint 的 `color` | RGBA 元组，各通道位于 `0..1` |
+| 所有 Paint 的可选 `opacity` | `0..1` 数值，默认 `1` |
+| 渐变 `gradientStops` | 非空 `[position, r, g, b, a][]`，全部数值位于 `0..1`，按位置排序 |
+| 渐变 `gradientStart`、`gradientEnd` | 二维端点 |
+| Stroke 的 `width` | 非负局部像素 |
+| Shape 的 `position` | 二维局部像素偏移 |
+| Rectangle 的 `width`、`height`、可选 `cornerRadius` | 非负局部像素，圆角默认 `0` |
+| Ellipse 的 `xRadius`、`yRadius`；Polygon 的 `radius`；Star 的 `innerRadius`、`outerRadius` | 非负局部像素 |
+| Polygon 的 `roundness`；Star 的 `innerRoundness`、`outerRoundness` | 可选 `0..100` 百分比，默认 `0` |
+| Custom 的 `customPaths` | 非空 `IRBezierPath[]`，使用 `nonzero` winding rule |
+
+Paint opacity 与颜色、色标或纹理自身的 alpha 相乘，并与 Layer opacity 独立保存。
+描边 cap/join、Paint 类型、纹理资源与缩放模式、图元类型、Polygon/Star 的 pointCount 保持静态。
+Rectangle 的圆角在采样时不能大于短边的一半；校验器在相关字段均为静态时检查这个跨字段约束，
+不会求值动画通道，也不保证插值过程始终满足数值范围。
+
+Texture Paint 通过 `assetId` 引用 Image Asset。`scaleMode` 支持 `fill`、`fit`、`crop` 和 `tile`，分别表示
+拉伸填满、等比完整显示、等比覆盖裁剪和按固有比例重复铺设。
+
+渐变连续插值要求色标数量一致，位置和 RGBA 按数组索引逐分量插值。允许色标位置重复，重叠边缘的
+具体渲染由消费方定义。路径连续插值要求路径数量、各路径顶点数量和 `closed` 标记一致；路径与顶点
+按索引对应，顶点和相对贝塞尔控制柄逐分量插值，不隐式重采样。
+结构一致性比较的是 `current.value` 与 `current.endValue ?? next.value`；`hold` 允许切换色标数量或
+路径拓扑，显式 `endValue` 也允许在下一关键帧发生跳变。
+Shape 不表示 trim path、repeater 或任意 Fill/Stroke 交错；转换器应通过诊断说明无法进入核心模型的部分。
 
 ## 时间与动画
 

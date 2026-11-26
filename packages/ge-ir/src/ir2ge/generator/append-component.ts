@@ -1,5 +1,5 @@
 import type {
-  IRColor, IRBezierPath, IRLayer,
+  IRAnimatedProperty, IRPropertyValue, IRColor, IRBezierPath, IRLayer,
   IRShape, IRShapeLayer, IRShapePaint, IRShapeStroke, IRTextLayer,
 } from '@galacean/animation-ir';
 import {
@@ -270,6 +270,14 @@ function appendShapeComponent(layer: IRShapeLayer, itemId: string, ctx: LayerGen
   return componentId;
 }
 
+export function readStaticShapeProperty<T extends IRPropertyValue>(property: IRAnimatedProperty<T>): T {
+  if (property.type !== 'static') {
+    throw new TypeError('[ge-ir:ir2ge] Animated shape geometry and paints are not supported yet.');
+  }
+
+  return property.value;
+}
+
 export function buildShapeOptions(
   shapeData: IRShape,
   ratio: number,
@@ -282,32 +290,32 @@ export function buildShapeOptions(
 
   switch (shapeData.primitiveType) {
     case IRShapePrimitiveType.Custom:
-      Object.assign(options, mapCustomPaths(shapeData.customPaths, ratio));
+      Object.assign(options, mapCustomPaths(readStaticShapeProperty(shapeData.customPaths), ratio));
 
       break;
     case IRShapePrimitiveType.Rectangle:
-      options['width'] = roundNumber(shapeData.width * ratio, 4);
-      options['height'] = roundNumber(shapeData.height * ratio, 4);
+      options['width'] = roundNumber(readStaticShapeProperty(shapeData.width) * ratio, 4);
+      options['height'] = roundNumber(readStaticShapeProperty(shapeData.height) * ratio, 4);
       options['roundness'] = mapRectangleCornerRadiusToGERoundness(shapeData);
 
       break;
     case IRShapePrimitiveType.Ellipse:
-      options['xRadius'] = roundNumber(shapeData.xRadius * ratio, 4);
-      options['yRadius'] = roundNumber(shapeData.yRadius * ratio, 4);
+      options['xRadius'] = roundNumber(readStaticShapeProperty(shapeData.xRadius) * ratio, 4);
+      options['yRadius'] = roundNumber(readStaticShapeProperty(shapeData.yRadius) * ratio, 4);
 
       break;
     case IRShapePrimitiveType.Polygon:
       options['pointCount'] = shapeData.pointCount;
-      options['radius'] = roundNumber(shapeData.radius * ratio, 4);
-      options['roundness'] = shapeData.roundness ?? 0;
+      options['radius'] = roundNumber(readStaticShapeProperty(shapeData.radius) * ratio, 4);
+      options['roundness'] = shapeData.roundness == null ? 0 : readStaticShapeProperty(shapeData.roundness);
 
       break;
     case IRShapePrimitiveType.Star:
       options['pointCount'] = shapeData.pointCount;
-      options['innerRadius'] = roundNumber(shapeData.innerRadius * ratio, 4);
-      options['outerRadius'] = roundNumber(shapeData.outerRadius * ratio, 4);
-      options['innerRoundness'] = shapeData.innerRoundness ?? 0;
-      options['outerRoundness'] = shapeData.outerRoundness ?? 0;
+      options['innerRadius'] = roundNumber(readStaticShapeProperty(shapeData.innerRadius) * ratio, 4);
+      options['outerRadius'] = roundNumber(readStaticShapeProperty(shapeData.outerRadius) * ratio, 4);
+      options['innerRoundness'] = shapeData.innerRoundness == null ? 0 : readStaticShapeProperty(shapeData.innerRoundness);
+      options['outerRoundness'] = shapeData.outerRoundness == null ? 0 : readStaticShapeProperty(shapeData.outerRoundness);
 
       break;
   }
@@ -332,7 +340,7 @@ export function buildShapeOptions(
   const strokeStyle = strokes[0];
 
   if (strokeStyle != null) {
-    options['strokeWidth'] = roundNumber(strokeStyle.width * ratio, 4);
+    options['strokeWidth'] = roundNumber(readStaticShapeProperty(strokeStyle.width) * ratio, 4);
     options['strokeCap'] = mapLineCap(strokeStyle.cap);
     options['strokeJoin'] = mapLineJoin(strokeStyle.join);
   }
@@ -363,17 +371,18 @@ export function buildShapeRenderStyles(shape: IRShape): ShapeRenderStyle[] {
 }
 
 function hasSameStrokeGeometry(left: IRShapeStroke, right: IRShapeStroke): boolean {
-  return left.width === right.width && left.cap === right.cap && left.join === right.join;
+  return readStaticShapeProperty(left.width) === readStaticShapeProperty(right.width) &&
+    left.cap === right.cap && left.join === right.join;
 }
 
 function mapRectangleCornerRadiusToGERoundness(shape: Extract<IRShape, { primitiveType: 'rectangle' }>): number {
-  const maxRadius = Math.min(shape.width, shape.height) / 2;
+  const maxRadius = Math.min(readStaticShapeProperty(shape.width), readStaticShapeProperty(shape.height)) / 2;
 
   if (maxRadius <= 0 || shape.cornerRadius == null) {
     return 0;
   }
 
-  return roundNumber(Math.min(Math.max(shape.cornerRadius / maxRadius, 0), 1) * 100, 4);
+  return roundNumber(Math.min(Math.max(readStaticShapeProperty(shape.cornerRadius) / maxRadius, 0), 1) * 100, 4);
 }
 
 const SHAPE_PRIMITIVE_TYPE_TO_GE: Record<IRShape['primitiveType'], ShapePrimitiveType> = {
@@ -428,10 +437,14 @@ function mapShapePaint(
   ratio: number,
   ctx: LayerGenerationContext | undefined,
 ): Record<string, unknown> | undefined {
+  const opacity = paint.opacity == null ? 1 : readStaticShapeProperty(paint.opacity);
+
   if (paint.type === IRPaintType.Solid) {
+    const color = readStaticShapeProperty(paint.color);
+
     return {
       type: FILL_TYPE_TO_GE[paint.type],
-      color: colorToGE(paint.color),
+      color: colorToGE([color[0], color[1], color[2], color[3] * opacity]),
     };
   }
 
@@ -442,9 +455,11 @@ function mapShapePaint(
   ) {
     return {
       type: FILL_TYPE_TO_GE[paint.type],
-      gradientStops: [ValueType.GRADIENT_COLOR, paint.gradientStops],
-      startPoint: vec2ToGE(paint.gradientStart, ratio),
-      endPoint: vec2ToGE(paint.gradientEnd, ratio),
+      gradientStops: [ValueType.GRADIENT_COLOR, readStaticShapeProperty(paint.gradientStops).map(stop => [
+        stop[0], stop[1], stop[2], stop[3], stop[4] * opacity,
+      ])],
+      startPoint: vec2ToGE(readStaticShapeProperty(paint.gradientStart), ratio),
+      endPoint: vec2ToGE(readStaticShapeProperty(paint.gradientEnd), ratio),
     };
   }
 
@@ -457,6 +472,7 @@ function mapShapePaint(
     return {
       type: FILL_TYPE_TO_GE[paint.type],
       ...(texture != null && { texture }),
+      ...(opacity !== 1 && { opacity }),
       scaleMode: TEXTURE_SCALE_MODE_TO_GE[paint.scaleMode ?? IRTextureScaleMode.Fill],
     };
   }

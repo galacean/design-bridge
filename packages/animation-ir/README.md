@@ -86,7 +86,7 @@ Pass shared assets as its second argument.
 | --- | --- | --- |
 | `solid` | `content.color` in normalized RGBA | Required, defines the rectangle |
 | `image` | `content.assetId` references an image | Required, sets the display size |
-| `text` | Text, `fontAssetId`, color, size, spacing, line height, alignment | Optional text bounds |
+| `text` | Text, font, styles, and block layout | Required for fixed or auto-height layout; otherwise optional |
 | `shape` | `content.shapes` holds vector geometry, fills, and strokes | Optional |
 | `particle` | `content` holds capacity, lifetime, and emission parameters | Required, defines the editing area |
 | `precomp` | `content.compositionId` selects the source, `clipToBounds` controls clipping to its canvas | Optional |
@@ -108,6 +108,114 @@ in the same composition. Each child keeps its own drawing order, visibility, and
 
 A layer can use both masks and a matte. Multiply content alpha by path-mask coverage, matte coverage, and layer
 `opacity` to get the resulting alpha.
+
+### Rich text
+
+Each style range uses a non-empty half-open `[start, end)` range in UTF-16 code units, matching JavaScript string indices.
+Ranges must be sorted, non-overlapping, within `text.length`, and must not split a surrogate pair. Uncovered text and
+omitted range styles inherit the content's default style. Ranges do not inherit styles from adjacent ranges;
+an omitted or empty `styleRanges` array uses the default style throughout.
+
+```ts
+import type { IRTextContent } from '@galacean/animation-ir';
+
+const content: IRTextContent = {
+  text: 'Hello world', fontAssetId: 'font:body', fontSize: 16,
+  color: [0, 0, 0, 1], letterSpacing: 0, lineHeight: 20, textAlign: 'left',
+  styleRanges: [{ start: 6, end: 11, fontAssetId: 'font:emphasis', color: [1, 0, 0, 1] }],
+};
+```
+
+Both font IDs must resolve to Font Assets; family, weight and italic style belong to those assets. Explicit line
+breaks live in `text` as `\n`; line height and alignment apply to the whole text block. Text and range styles are static.
+Per-character positioning, text on a path, and source-specific markup are outside this contract.
+
+### Text layout
+
+Layout belongs to the whole `IRTextContent` and does not depend on whether it has `styleRanges`.
+Omitted fields have the following IR defaults; consumers must not substitute their runtime's defaults.
+
+| Field | Values | Default |
+| --- | --- | --- |
+| `sizeMode` | `fixed`, `auto-width`, `auto-height` | `auto-width` |
+| `wrap` | `true` wraps to the constrained width; `false` keeps only explicit `\n` line breaks | `false` |
+| `overflow` | `visible`, `clip`, `shrink` | `visible` |
+| `verticalAlign` | `top`, `center`, `bottom` | `top` |
+
+`localBounds.x/y` locate the layout box in layer-local pixels. When bounds are absent, the origin is `(0, 0)`.
+These are layout bounds, not the visible glyph-ink bounds. Their dimensions have the following roles:
+
+| Size mode | Constraints from `localBounds` | Dimensions computed from text |
+| --- | --- | --- |
+| `fixed` | Positive `width` and `height`; bounds required | None; overflow never resizes the box |
+| `auto-height` | Positive `width`; bounds required | Height after line breaking |
+| `auto-width` | No width or height constraint; bounds optional | Width and height from explicit lines |
+
+Dimensions on automatic axes are optional measurement hints within `localBounds`; if bounds are supplied, all four
+members are still required and width/height must be finite and non-negative. Automatic dimensions must be recomputed
+from text and must not constrain wrapping, alignment, clipping, or shrinking. `wrap: true` requires `fixed` or
+`auto-height`. Changing automatic dimensions preserves the box origin and the authored local-pixel transform anchor;
+consumers must not implicitly move either to the new center.
+
+First resolve line breaks and automatic dimensions. `visible` permits content outside the resolved box;
+`clip` clips to that box. `shrink` uniformly reduces the laid-out block, including font size, letter spacing, and
+line height, until its width and height fit; it never enlarges content or reflows lines after scaling.
+Apply horizontal `textAlign` and `verticalAlign` to the resulting block within the resolved box, then clip if requested.
+Text layout and style ranges are static; layer transforms can animate the result.
+
+```ts
+import type { IRTextLayer } from '@galacean/animation-ir';
+
+const label: IRTextLayer = {
+  id: 'label', type: 'text', visible: true, time: { inFrame: 0, outFrame: 60 },
+  localBounds: { x: 0, y: 0, width: 240, height: 80 },
+  content: {
+    text: 'A label that can wrap', fontAssetId: 'font:body', fontSize: 16,
+    color: [0, 0, 0, 1], letterSpacing: 0, lineHeight: 20, textAlign: 'left',
+    sizeMode: 'fixed', wrap: true, overflow: 'clip', verticalAlign: 'center',
+  },
+};
+```
+
+The validator checks field values, required bounds, and constrained dimensions without materializing defaults or
+measuring text. Font fallback, glyph metrics, shaping, and exact break opportunities remain consumer-defined;
+the contract specifies layout policy rather than pixel-identical rendering across engines.
+Adapters that previously used measured bounds as a fixed box must explicitly set `sizeMode: 'fixed'` and their
+wrapping, overflow, and alignment policies. Existing GE/SVG exporters are not yet adapted to these layout fields.
+
+### Shape
+
+Shape, fill, and stroke lists use back-to-front order. Supported primitives are custom, rectangle, ellipse, polygon,
+and star. Paints include solid, linear, radial, angular, and image textures. Texture paints reference image assets and
+support stretching to `fill`, containing with `fit`, covering and cropping with `crop`, or repeating with `tile`.
+Each shape draws all fills before all strokes. The following fields use `IRAnimatedProperty<T>`, including for
+constant values (`{ type: 'static', value }`):
+
+| Fields | Value type and constraints |
+| --- | --- |
+| Solid paint `color` | RGBA tuple, each channel in `0..1` |
+| All paints' optional `opacity` | Number in `0..1`, default `1` |
+| Gradient `gradientStops` | Non-empty `[position, r, g, b, a][]`, all values in `0..1`, sorted by position |
+| Gradient `gradientStart`, `gradientEnd` | Two-dimensional endpoints |
+| Stroke `width` | Non-negative local pixels |
+| Shape `position` | Two-dimensional local-pixel offset |
+| Rectangle `width`, `height`, optional `cornerRadius` | Non-negative local pixels; corner radius defaults to `0` |
+| Ellipse `xRadius`, `yRadius`; polygon `radius`; star `innerRadius`, `outerRadius` | Non-negative local pixels |
+| Polygon `roundness`; star `innerRoundness`, `outerRoundness` | Optional percentages in `0..100`, default `0` |
+| Custom `customPaths` | Non-empty `IRBezierPath[]`, using the `nonzero` winding rule |
+
+Paint opacity multiplies the solid color, gradient stop, or texture alpha independently of layer opacity.
+Stroke cap/join, paint type, texture asset/scale mode, primitive type, and polygon/star point count remain static.
+Rectangle corner radius must not exceed half of the shorter edge at the sampled time. The validator checks that
+cross-field bound for all-static geometry; it does not evaluate animated channels or guarantee interpolated bounds.
+
+Continuous gradient segments require equal stop counts; stop positions and RGBA interpolate by array index.
+Duplicate stop positions are allowed; rendering their hard edge is consumer-defined. Continuous path segments
+require equal path counts, equal vertex counts per path, and matching `closed` flags. Paths and vertices correspond
+by index, and points and relative Bézier handles interpolate component-wise without implicit resampling.
+Compatibility is checked between `current.value` and `current.endValue ?? next.value`. `hold` segments may change
+stop counts or path topology; an explicit `endValue` may also precede a discontinuous next value.
+Trim paths, repeaters, and arbitrary fill/stroke interleaving are outside the core model and should produce diagnostics.
 
 ## Time and animation
 

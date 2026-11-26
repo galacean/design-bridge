@@ -16,7 +16,7 @@ import { appendTimelineTracks } from './append-timeline-tracks';
 import { computeLayerTiming } from '../converter/timing';
 import { buildColorAnimation, buildTransformAnimation } from '../converter/animation';
 import {
-  appendComponent, buildShapeOptions, buildShapeRenderStyles,
+  appendComponent, buildShapeOptions, buildShapeRenderStyles, readStaticShapeProperty,
 } from './append-component';
 import { copyPreservedMaskToComponent, restoreComponentRenderData } from './component-preservation';
 import {
@@ -620,6 +620,7 @@ function appendShapeLayerItems(layer: IRShapeLayer, ctx: LayerGenerationContext)
   for (let shapeIndex = layer.content.shapes.length - 1; shapeIndex >= 0; shapeIndex -= 1) {
     const shapeData = layer.content.shapes[shapeIndex];
     const renderStyles = buildShapeRenderStyles(shapeData);
+    const position = readStaticShapeProperty(shapeData.position);
 
     for (let styleIndex = renderStyles.length - 1; styleIndex >= 0; styleIndex -= 1) {
       const renderStyle = renderStyles[styleIndex];
@@ -631,8 +632,8 @@ function appendShapeLayerItems(layer: IRShapeLayer, ctx: LayerGenerationContext)
         ctx.layerToItemId[layerId] = shapeItemId;
       }
 
-      const shapeOffsetX = ctx.ratio * (shapeData.position[0] - anchor[0]);
-      const shapeOffsetY = -ctx.ratio * (shapeData.position[1] - anchor[1]);
+      const shapeOffsetX = ctx.ratio * (position[0] - anchor[0]);
+      const shapeOffsetY = -ctx.ratio * (position[1] - anchor[1]);
       const shapePosition: [number, number, number] = [
         basePosition[0] + shapeOffsetX,
         basePosition[1] + shapeOffsetY,

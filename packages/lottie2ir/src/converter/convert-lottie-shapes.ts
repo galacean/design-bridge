@@ -163,7 +163,7 @@ function mapGradientType(
 function makeSolidPaint(r: number, g: number, b: number, a: number): IRShapePaint {
   return {
     type: IRPaintType.Solid,
-    color: [r, g, b, a] as IRColor,
+    color: { type: 'static', value: [r, g, b, a] as IRColor },
   };
 }
 
@@ -239,9 +239,9 @@ function convertGradientPaint(item: Shape.GradientFill | Shape.GradientStroke): 
 
   return {
     type: gradientType,
-    gradientStops: stops,
-    gradientStart: [startPoint[0], startPoint[1]],
-    gradientEnd: [endPoint[0], endPoint[1]],
+    gradientStops: { type: 'static', value: stops },
+    gradientStart: { type: 'static', value: [startPoint[0], startPoint[1]] },
+    gradientEnd: { type: 'static', value: [endPoint[0], endPoint[1]] },
   };
 }
 
@@ -253,7 +253,7 @@ interface PaintStyles {
 function makeStroke(item: Shape.Stroke | Shape.GradientStroke, paint: IRShapePaint): IRShapeStroke {
   return {
     paint,
-    width: Math.max(getStaticValue(item.w, 1), 0),
+    width: { type: 'static', value: Math.max(getStaticValue(item.w, 1), 0) },
     cap: mapLineCap(item.lc ?? 1),
     join: mapLineJoin(item.lj ?? 1),
   };
@@ -441,6 +441,13 @@ function buildShapeData(
   let shapeData: IRShape;
 
   const geoPosition = getStaticArrayValue(geometry.p, [0, 0]);
+  const trPosition = transform == null ? [0, 0] : getStaticArrayValue(transform.p, [0, 0]);
+  const trScale = transform == null ? [100, 100] : getStaticArrayValue(transform.s, [100, 100]);
+  const scaleX = trScale[0] / 100;
+  const scaleY = trScale[1] / 100;
+  const position: [number, number] = [
+    geoPosition[0] * scaleX + trPosition[0], geoPosition[1] * scaleY + trPosition[1],
+  ];
 
   if (geoType === 'el') {
     const sizeArray = getStaticArrayValue(geometry.s, [100, 100]);
@@ -449,11 +456,11 @@ function buildShapeData(
 
     shapeData = {
       primitiveType: IRShapePrimitiveType.Ellipse,
-      xRadius,
-      yRadius,
+      xRadius: { type: 'static', value: xRadius * scaleX },
+      yRadius: { type: 'static', value: yRadius * scaleY },
       fills,
       strokes,
-      position: [geoPosition[0], geoPosition[1]],
+      position: { type: 'static', value: position },
     };
   } else if (geoType === 'rc') {
     const sizeArray = getStaticArrayValue(geometry.s, [100, 100]);
@@ -461,12 +468,14 @@ function buildShapeData(
 
     shapeData = {
       primitiveType: IRShapePrimitiveType.Rectangle,
-      width: sizeArray[0],
-      height: sizeArray[1],
-      cornerRadius,
+      width: { type: 'static', value: sizeArray[0] * scaleX },
+      height: { type: 'static', value: sizeArray[1] * scaleY },
+      cornerRadius: { type: 'static', value: clampRectangleCornerRadius(
+        cornerRadius * Math.min(Math.abs(scaleX), Math.abs(scaleY)), sizeArray[0] * scaleX, sizeArray[1] * scaleY,
+      ) },
       fills,
       strokes,
-      position: [geoPosition[0], geoPosition[1]],
+      position: { type: 'static', value: position },
     };
   } else if (geoType === 'sr') {
     const pointCount = getStaticValue(geometry.pt, 5);
@@ -479,23 +488,23 @@ function buildShapeData(
       shapeData = {
         primitiveType: IRShapePrimitiveType.Star,
         pointCount,
-        innerRadius,
-        outerRadius,
-        innerRoundness,
-        outerRoundness,
+        innerRadius: { type: 'static', value: innerRadius * Math.max(scaleX, scaleY) },
+        outerRadius: { type: 'static', value: outerRadius * Math.max(scaleX, scaleY) },
+        innerRoundness: { type: 'static', value: innerRoundness },
+        outerRoundness: { type: 'static', value: outerRoundness },
         fills,
         strokes,
-        position: [geoPosition[0], geoPosition[1]],
+        position: { type: 'static', value: position },
       };
     } else {
       shapeData = {
         primitiveType: IRShapePrimitiveType.Polygon,
         pointCount,
-        radius: outerRadius,
-        roundness: outerRoundness,
+        radius: { type: 'static', value: outerRadius * Math.max(scaleX, scaleY) },
+        roundness: { type: 'static', value: outerRoundness },
         fills,
         strokes,
-        position: [geoPosition[0], geoPosition[1]],
+        position: { type: 'static', value: position },
       };
     }
   } else {
@@ -503,54 +512,19 @@ function buildShapeData(
   }
 
   if (transform != null) {
-    const trPosition = getStaticArrayValue(transform.p, [0, 0]);
-    const trScale = getStaticArrayValue(transform.s, [100, 100]);
-    const scaleX = trScale[0] / 100;
-    const scaleY = trScale[1] / 100;
-
-    switch (shapeData.primitiveType) {
-      case IRShapePrimitiveType.Rectangle:
-        shapeData.width *= scaleX;
-        shapeData.height *= scaleY;
-        if (shapeData.cornerRadius != null) {
-          shapeData.cornerRadius = clampRectangleCornerRadius(
-            shapeData.cornerRadius * Math.min(Math.abs(scaleX), Math.abs(scaleY)),
-            shapeData.width,
-            shapeData.height,
-          );
-        }
-
-        break;
-      case IRShapePrimitiveType.Ellipse:
-        shapeData.xRadius *= scaleX;
-        shapeData.yRadius *= scaleY;
-
-        break;
-      case IRShapePrimitiveType.Polygon:
-        shapeData.radius *= Math.max(scaleX, scaleY);
-
-        break;
-      case IRShapePrimitiveType.Star:
-        shapeData.outerRadius *= Math.max(scaleX, scaleY);
-        shapeData.innerRadius *= Math.max(scaleX, scaleY);
-
-        break;
-    }
-
     // Gradient endpoints use the shape's local pixel space.
     for (const paint of [...shapeData.fills, ...shapeData.strokes.map(stroke => stroke.paint)]) {
-      if ('gradientStart' in paint && paint.gradientStart != null) {
-        paint.gradientStart = [paint.gradientStart[0] * scaleX, paint.gradientStart[1] * scaleY];
+      if ('gradientStart' in paint && paint.gradientStart.type === 'static') {
+        paint.gradientStart = { type: 'static', value: [
+          paint.gradientStart.value[0] * scaleX, paint.gradientStart.value[1] * scaleY,
+        ] };
       }
-      if ('gradientEnd' in paint && paint.gradientEnd != null) {
-        paint.gradientEnd = [paint.gradientEnd[0] * scaleX, paint.gradientEnd[1] * scaleY];
+      if ('gradientEnd' in paint && paint.gradientEnd.type === 'static') {
+        paint.gradientEnd = { type: 'static', value: [
+          paint.gradientEnd.value[0] * scaleX, paint.gradientEnd.value[1] * scaleY,
+        ] };
       }
     }
-
-    shapeData.position = [
-      shapeData.position[0] * scaleX + trPosition[0],
-      shapeData.position[1] * scaleY + trPosition[1],
-    ];
   }
 
   return shapeData;
@@ -632,10 +606,10 @@ function buildCustomShapeData(
 
   const shapeData: IRShape = {
     primitiveType: IRShapePrimitiveType.Custom,
-    customPaths,
+    customPaths: { type: 'static', value: customPaths },
     fills,
     strokes,
-    position,
+    position: { type: 'static', value: position },
   };
 
   return shapeData;
