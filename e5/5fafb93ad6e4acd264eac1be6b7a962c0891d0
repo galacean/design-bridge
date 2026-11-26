@@ -1,0 +1,83 @@
+packages/ge-ir/README.md
+  s_1779dedea8de63::t_075f19e84ad4cc 241
+packages/animation-ir/tests/unit/validator/paint-animation.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1-118
+packages/lottie2ir/src/converter/convert-lottie-shapes.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 166,242-244,256,444-450,459-460,463,471-475,478,491-494,497,503-504,507,517-520,522-525,609,612
+packages/animation-ir/README.md
+  s_1779dedea8de63::t_075f19e84ad4cc 89,112-218
+  s_1779dedea8de63::t_09a19c05e56d23 219
+packages/animation-ir/tests/unit/validator/asset-validation.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 50-51,53-56
+packages/animation-ir/src/schema/shape.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1,33-35,38,41-46,69-70,99-100,114,117,123,129-134,137,140-143,146,149-150,157-159,166-171,174
+packages/ge-ir/src/ir2ge/generator/append-component.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 2,273-280,293,297-298,303-304,309-310,315-318,343,374-375,379,385,440-441,443-444,447,458-462,475
+packages/lottie2ir/tests/unit/text-glyphs-and-parenting.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 4-6,74-87,98
+packages/lottie2ir/tests/helpers/shape-test-helpers.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1-9
+packages/animation-ir/tests/types/type-contract.type-test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 279-280,283,288-289,294,297-298,301,307-308,311,313,320,324-326,333-334,339-340,344-345,355,429-440,515-516,535
+packages/animation-ir/src/validator/property-validation.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 6,25,30-35,38,63,66-71,75,96,156,159-164
+packages/lottie2ir/tests/unit/assemble-ir-scene.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 949,952
+packages/animation-ir/tests/unit/validator/composition-validation.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 304-306,308,334-335,344,348,355,386-388,391,405-406,409,424,426,430,432-435,457-458,467
+packages/ge-ir/tests/ir2ge/generate-scene.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 4,375-377,379,383-385,387,1818-1819,1828,1864-1865,1869,1872-1874,1878,1908-1911,1913,1925-1970,1979-1981,1984-1985,1990-1991,1996,2389,2396,2399,2597-2599,2601
+packages/ge-ir/tests/ge2ir/round-trip.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1959-1963,2435-2436,2442,2446,2465,2476,2519-2520,2523-2525,2528,2561-2563,2567-2568,2573-2574,2579,2592,2595,2597,2821-2823,2825,2882-2884,2886
+packages/ge-ir/src/ir2ge/converter/bezier.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 41,251
+packages/animation-ir/README-zh_CN.md
+  s_1779dedea8de63::t_075f19e84ad4cc 85,102-207
+  s_1779dedea8de63::t_eed854f57e9e7c 208
+packages/animation-ir/tests/unit/validator/geometry-animation.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1-146
+packages/animation-ir/tests/unit/validator/text-style-range-validation.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1-82
+packages/lottie2ir/src/converter/convert-lottie-text-glyphs.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 94-95,98-100,104-105,121-123
+packages/animation-ir/src/schema/value-types.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1-2,84,103-104
+packages/animation-ir/tests/unit/validator/content-hardening.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 321-322,326,328-329,336,342-343,359,362-364,368,375-376,388-389,393-394,398-399,403,408,472,478,482-484,494,585,588-590,596,599
+packages/animation-ir/tests/unit/validator/text-layout-validation.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 1-94
+packages/animation-ir/src/validator/content-validation.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 5,39-128,204,208-212,218-232,249-273,282,298-299,301,303,306,311,313-326,338,342-350,366-401,411,433-441,458,465-466,493-499,512-516
+packages/animation-ir/src/validator/layer-validation.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 220-222,224-227,257-260
+packages/ge-ir/src/ir2ge/generator/append-layer-items.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 19,623,635-636
+packages/animation-ir/src/schema/layer.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 5-19,31-49,168,172-177,193,199
+packages/animation-ir/src/validator/asset-validation.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 310-318
+packages/ge-ir/README-zh_CN.md
+  s_1779dedea8de63::t_075f19e84ad4cc 227
+packages/ge-ir/src/ge2ir/parser/component.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 2,407,447,457,468-469,478-481,492,507-508,544,579-581,597,689,692-693,700,708
+packages/lottie2ir/tests/unit/converter/convert-lottie-shapes-style-and-edge.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 6-8,38-44,70-72,96,131-132,148,163-164,179,244-245,249,271-273,287-288,302,431-432,451-452,469,488-489,514-515,551,571-572
+packages/lottie2ir/tests/unit/converter/convert-lottie-shapes.test.ts
+  s_1779dedea8de63::t_075f19e84ad4cc 6-8,24-25,27,47-49,63,83-84,99-102,200-203,332-335,363-365,394-395,412,457,459,531-533,575
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "e55fafb93ad6e4acd264eac1be6b7a962c0891d0",
+  "prompts": {},
+  "sessions": {
+    "s_1779dedea8de63": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21704-ba12-7d63-b3de-0bed970f4978",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "澄弈 <chengyi.zzm@gmail.com>"
+    }
+  }
+}
